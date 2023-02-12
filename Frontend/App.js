@@ -7,7 +7,6 @@ export default function App() {
   
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
       <Button onPress={() => setCounter(counter + 1)} title={`You clicked ${counter} times`}/>
       <StatusBar style="auto" />
     </View>
