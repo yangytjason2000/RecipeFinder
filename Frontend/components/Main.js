@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     left: '5%'
   },
   recipe:{
-    bottom: '45%',
+    top: '-45%',
     left: '30%',
   },
 });
