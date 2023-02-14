@@ -1,23 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableHighlight } from 'react-native';
 import { useState } from 'react';
-
+import  Main  from './components/Main.js';
+import Fridge from './components/Fridge.js'
 export default function App() {
-  const [counter, setCounter] = useState(0);
-  
+  const state=1;
   return (
-    <View style={styles.container}>
-      <Button onPress={() => setCounter(counter + 1)} title={`You clicked ${counter} times`}/>
-      <StatusBar style="auto" />
-    </View>
+    <Main />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
