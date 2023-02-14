@@ -27,11 +27,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fridge: {
+    top: '10%',
     bottom: '0%',
     left: '5%'
   },
   recipe:{
-    bottom: '60%',
+    bottom: '50%',
     left: '25%',
   }
 });
