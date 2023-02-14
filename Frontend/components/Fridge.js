@@ -1,7 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, Animated} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
+import { styles } from '../styles';
 export default function Fridge({setStatus}) {
   return (
     <FadeInView style={styles.container}>
@@ -13,20 +13,3 @@ export default function Fridge({setStatus}) {
     </FadeInView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  imageBackground: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  fridge: {
-    top: '10%',
-    left: '5%'
-  },
-  recipe:{
-    bottom: '160%',
-    left: '25%',
-  },
-});
