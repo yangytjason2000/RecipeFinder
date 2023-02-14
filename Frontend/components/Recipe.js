@@ -2,18 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, Animated } from 'react-native';
 import { useState, useRef, useEffect} from 'react';
 import { FadeInView } from './FadeInView';
-export default function Main({setStatus}) {
+export default function Recipe({setStatus}) {
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
-      <TouchableOpacity onPress={()=>setStatus(1)} style={styles.fridge}>
-      <Image source={require( '../assets/fridge.png')}></Image>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={()=>setStatus(2)} style={styles.recipe}>
+      <TouchableOpacity onPress={()=>setStatus(0)} style={styles.recipe}>
       <Image source={require('../assets/recipe.png')}></Image>
       </TouchableOpacity> 
       </ImageBackground>
-      <StatusBar style="auto" />
     </FadeInView>
   );
 }
@@ -26,11 +22,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fridge: {
-    top: '5%',
+    top: '10%',
     left: '5%'
   },
   recipe:{
-    bottom: '45%',
-    left: '30%',
+    top: '0%',
+    left: '25%',
   },
 });
