@@ -2,12 +2,14 @@ import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, Touc
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import { styles } from '../styles';
-import AddFood from './addFood';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 export default function Fridge({setStatus}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
   const [number,setNumber] = useState('');
   const [emoji,setEmoji] = useState('');
+  const [date, setDate] = useState(new Date())
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
@@ -28,6 +30,7 @@ export default function Fridge({setStatus}) {
             <TextInput style={styles.input} onChangeText={setName} value={name}/>
             <TextInput style={styles.input} onChangeText={setNumber} value={number}/>
             <TextInput style={styles.input} onChangeText={setEmoji} value={emoji}/>
+            <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}>
@@ -58,5 +61,6 @@ async function addFood(name,number,emoji){
     method: "POST",
     body: JSON.stringify(message),
   })
-  .then(response=>console.log(response.json()))
+  .then(response => {console.log(response.status); return response.json();})
+  .then(response=>console.log(response))
 }
