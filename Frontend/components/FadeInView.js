@@ -1,4 +1,4 @@
-import { Animated } from 'react-native';
+import { Animated, SafeAreaView} from 'react-native';
 import { useRef, useEffect} from 'react';
 export const FadeInView = props => {
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0

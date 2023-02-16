@@ -6,9 +6,9 @@ export default function Recipe({setStatus}) {
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
-      <TouchableOpacity onPress={()=>setStatus(0)} style={styles.recipe}>
-      <Image source={require('../assets/recipe.png')}></Image>
-      </TouchableOpacity> 
+        <TouchableOpacity onPress={()=>setStatus(0)} style={styles.recipe}>
+          <Image source={require('../assets/recipe.png')}></Image>
+        </TouchableOpacity> 
       </ImageBackground>
     </FadeInView>
   );
