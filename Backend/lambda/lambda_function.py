@@ -1,7 +1,7 @@
 import boto3
 import json
 
-METHODS = set(['GET', 'POST'])
+METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient'])
 
 def lambda_handler(event, context):
@@ -20,6 +20,8 @@ def lambda_handler(event, context):
         return get_item(table)
     if method == 'POST':
         return post_item(table, event['body'])
+    if method == 'DELETE':
+        return delete_item(table, event['body'])
 
 def get_item(table):
     items = []
@@ -33,12 +35,17 @@ def get_item(table):
 def post_item(table, payload):
     valid, item = validate_payload(payload)
     if not valid:
-        return serialize_invalid_response('Payload not valid')
-    
-    if not 'name' in item:
-        return serialize_invalid_response('Ingredient name not provided')
+        return serialize_invalid_response(item)
 
     table.put_item(Item=item)
+    return serialize_correct_response()
+
+def delete_item(table, payload):
+    valid, item = validate_payload(payload)
+    if not valid:
+        return serialize_invalid_response(item)
+
+    table.delete_item(Key={'name': item['name']})
     return serialize_correct_response()
 
 def validate_payload(payload):
@@ -46,6 +53,8 @@ def validate_payload(payload):
         payload = json.loads(payload)
     except Exception:
         return False, 'Payload not valid'
+    if not 'name' in payload:
+        return False, 'Ingredient name not provided'
     return True, payload
 
 def serialize_correct_response(body=None):

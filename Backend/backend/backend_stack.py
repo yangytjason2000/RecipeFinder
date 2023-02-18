@@ -2,8 +2,7 @@ from aws_cdk import (
     Stack,
     aws_dynamodb as dynamodb,
     aws_lambda,
-    aws_apigateway as apigw,
-    RemovalPolicy
+    aws_apigateway as apigw
 )
 from constructs import Construct
 
@@ -36,6 +35,4 @@ class BackendStack(Stack):
             rest_api_name='Recipe Finder API'
         )
         get_ingredient_lambda_integration = apigw.LambdaIntegration(get_ingredient_lambda, proxy=True)
-        # ingredient_resource = api.root.add_resource('ingredient')
         resource = api.root.add_proxy(default_integration=get_ingredient_lambda_integration)
-        # ingredient_resource.add_method('POST', get_ingredient_lambda_integration)
