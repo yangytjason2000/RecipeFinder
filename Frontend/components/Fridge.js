@@ -1,66 +1,42 @@
-import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import { styles } from '../styles';
-import DateTimePicker from '@react-native-community/datetimepicker';
-
-export default function Fridge({setStatus}) {
+import FoodModal from './FoodModal';
+import Item from './FoodItem';
+export default function Fridge({setStatus,foodList}) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [name, setName] = useState('');
-  const [number,setNumber] = useState('');
+  const [foodModalVisible,setFoodModalVisible] = useState(false);
+  //name,emoji,number
+  const [name,setName] = useState('');
   const [emoji,setEmoji] = useState('');
-  const [date, setDate] = useState(new Date())
+  const [number,setNumber] = useState('');
+  const [date,setDate] = useState(new Date());
+
+  const [selectedName,setSelectedName] = useState('');
+  const [selectedEmoji,setSelectedEmoji] = useState('');
+  const [selectedNumber,setSelectedNumber] = useState('');
+  const [selectedDate,setSelectedDate] = useState(new Date());
   return (
-    <FadeInView style={styles.container}>
-      <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
-        <Image source={require( '../assets/open.png') } style={styles.open}></Image>
-        <TouchableOpacity onPress={()=>setStatus(0)} style={styles.back}>
-          <Image source={require( '../assets/back.png')}></Image>
-        </TouchableOpacity>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TextInput style={styles.input} onChangeText={setName} value={name}/>
-            <TextInput style={styles.input} onChangeText={setNumber} value={number}/>
-            <TextInput style={styles.input} onChangeText={setEmoji} value={emoji}/>
-            <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Back</Text>
-            </Pressable>
-            <Pressable 
-              style={[styles.button,styles.buttonClose]}
-              onPress={()=> addFood(name,number,emoji)}>
-              <Text style={styles.textStyle}>Add</Text>
-            </Pressable>
-          </View>
-        </View>
-        </Modal>
-        <TouchableOpacity onPress={()=>setModalVisible(true)} style={styles.add}>
-          <Image source={require( '../assets/add.png')}></Image>
-        </TouchableOpacity>
-      </ImageBackground>
-    </FadeInView>
+    <View style={styles.fridgeContainer}>
+      <SafeAreaView style={styles.container}>
+      <FlatList
+        data={foodList}
+        renderItem={({item}) => <Item food={item} setName={setSelectedName} setEmoji={setSelectedEmoji} 
+        setNumber={setSelectedNumber} setDate={setSelectedDate} setFoodModalVisible={setFoodModalVisible}/>}
+      />
+      </SafeAreaView>
+      <FoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} name={name} emoji={emoji} number={number} date={date}
+      setName={setName} setEmoji={setEmoji} setNumber={setNumber} setDate={setDate}/>
+      <FoodModal modalVisible={foodModalVisible} setModalVisible={setFoodModalVisible} 
+      name={selectedName} emoji={selectedEmoji} number={selectedNumber} date={selectedDate} 
+      setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setDate={setSelectedDate} deleteFlag={true}/>
+      <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.button,styles.buttonClose]}>
+      <Text style={styles.textStyle}>Add</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
+      <Text style={styles.textStyle}>Back</Text>
+      </TouchableOpacity>
+    </View>
   );
-}
-async function addFood(name,number,emoji){
-  const message={
-    "name": name,
-    "emoji": emoji,
-    "quantity": number,
-  }
-  await fetch('https://a4o8ta8sa4.execute-api.us-east-2.amazonaws.com/prod/ingredient',{
-    method: "POST",
-    body: JSON.stringify(message),
-  })
-  .then(response => {console.log(response.status); return response.json();})
-  .then(response=>console.log(response))
 }

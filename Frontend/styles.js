@@ -3,6 +3,13 @@ export  const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
+    fridgeContainer: {
+      flex: 1,
+      backgroundColor: 'grey',
+      justifyContent: 'space-between',
+      paddingBottom: '10%',
+      paddingHorizontal: '5%',
+    },
     imageBackground: {
       flex: 1,
       justifyContent: 'center',
@@ -18,19 +25,23 @@ export  const styles = StyleSheet.create({
       left: '30%',
     },
     back:{
-      position:'absolute',
-      top: '10%',
-      left: '70%',
-    },
-    open:{
-      position:'absolute',
-      top: '10%',
-      right: '0%',
+      borderWidth:1,
+      borderColor:'black',
+      backgroundColor: 'red',
     },
     add:{
-      position:'absolute',
-      bottom:'20%',
-      left:'10%',
+      justifyContent:'flex-end',
+      alignItems:'flex-end',
+    },
+    item: {
+      backgroundColor: 'white',
+      padding: 20,
+      marginVertical: 8,
+      marginHorizontal: 16,
+      borderRadius: 25,
+    },
+    food: {
+      fontSize: 20,
     },
     centeredView: {
       flex: 1,
@@ -57,6 +68,8 @@ export  const styles = StyleSheet.create({
       borderRadius: 20,
       padding: 10,
       elevation: 2,
+      marginBottom: 10,
+      marginTop: 10,
     },
     buttonOpen: {
       backgroundColor: '#F194FF',
@@ -78,5 +91,6 @@ export  const styles = StyleSheet.create({
       margin: 12,
       borderWidth: 1,
       padding: 10,
+      width: 100,
     },
   });
