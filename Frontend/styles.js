@@ -10,6 +10,11 @@ export  const styles = StyleSheet.create({
       paddingBottom: '10%',
       paddingHorizontal: '5%',
     },
+    recipeContainer: {
+      flex: 0.8,
+      backgroundColor: 'white',
+      justifyContent: 'space-between',
+    },
     imageBackground: {
       flex: 1,
       justifyContent: 'center',
@@ -43,25 +48,30 @@ export  const styles = StyleSheet.create({
     food: {
       fontSize: 20,
     },
+    title: {
+      fontSize: 25,
+      fontStyle: 'italic',
+      fontWeight: 'bold',
+    },
     centeredView: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22,
+      marginTop: 10,
     },
     modalView: {
       margin: 20,
       backgroundColor: 'white',
       borderRadius: 20,
-      padding: 35,
+      padding: 50,
       alignItems: 'center',
       shadowColor: '#000',
       shadowOffset: {
-        width: 0,
-        height: 2,
+        width: 10,
+        height: 20,
       },
       shadowOpacity: 0.25,
-      shadowRadius: 4,
+      shadowRadius: 5,
       elevation: 5,
     },
     button: {
@@ -91,6 +101,7 @@ export  const styles = StyleSheet.create({
       margin: 12,
       borderWidth: 1,
       padding: 10,
-      width: 100,
+      width: 150,
+      fontSize: 25,
     },
   });

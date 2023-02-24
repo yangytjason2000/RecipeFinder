@@ -5,7 +5,7 @@ import { styles } from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number=''
-,date=new Date(),setName,setNumber,setEmoji,setDate,deleteFlag=false}) {
+,date=new Date(),setName,setNumber,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
   return (
         <Modal
           animationType="slide"
@@ -17,27 +17,27 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text>name</Text>
+            <Text style={styles.title}>name</Text>
             <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>
-            <Text>number</Text>
+            <Text style={styles.title}>number</Text> 
             <TextInput style={styles.input} onChangeText={setNumber} value={number} placeholder={number}/>
-            <Text>emoji</Text>
+            <Text style={styles.title}>emoji</Text>
             <TextInput style={styles.input} onChangeText={setEmoji} value={emoji} placeholder={emoji}/>
-            <Text>date</Text>
-            <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />
+            {!isRecipe && <Text style={styles.title}>date</Text>}
+            {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> addFood(name,number,emoji,date)}>
+                onPress={()=> addFood(name,number,emoji,date,setFoodList)}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> addFood(name,number,emoji,date)}>
+              onPress={()=> addFood(name,number,emoji,date,setFoodList)}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
             {deleteFlag && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> removeFood(name,number,emoji,date)}>
+              onPress={()=> removeFood(name,number,emoji,date,setFoodList)}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity
@@ -50,21 +50,21 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         </Modal>
   );
 }
-async function addFood(name,number,emoji,date){
-    const message={
-      "name": name,
-      "emoji": emoji,
-      "quantity": number,
-      "date": date,
-    }
-    await fetch('https://a4o8ta8sa4.execute-api.us-east-2.amazonaws.com/prod/ingredient',{
-      method: "POST",
-      body: JSON.stringify(message),
-    })
-    .then(response => {console.log(response.status); return response.json();})
-    .then(response=>console.log(response))
+async function addFood(name,number,emoji,date,setFoodList){
+  const message={
+    "name": name,
+    "emoji": emoji,
+    "quantity": number,
+    "date": date,
+  }
+  await fetch('https://a4o8ta8sa4.execute-api.us-east-2.amazonaws.com/prod/ingredient',{
+    method: "POST",
+    body: JSON.stringify(message),
+  })
+  .then(response => {console.log(response.status); return response.json();})
+  .then(response=>setFoodList(response))
 }
-async function removeFood(name,number,emoji,date){
+async function removeFood(name,number,emoji,date,setFoodList){
   const message={
     "name": name,
     "emoji": emoji,
@@ -76,5 +76,5 @@ async function removeFood(name,number,emoji,date){
     body: JSON.stringify(message),
   })
   .then(response => {console.log(response.status); return response.json();})
-  .then(response=>console.log(response))
+  .then(response=>setFoodList(response))
 }

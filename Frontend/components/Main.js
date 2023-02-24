@@ -2,7 +2,11 @@ import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOp
 import { useState, useRef, useEffect} from 'react';
 import { FadeInView } from './FadeInView';
 import { styles } from '../styles';
-export default function Main({setStatus}) {
+import LoginModal from './LoginModal';
+export default function Main({setStatus,setFoodList}) {
+  const [loginModalVisible,setLoginModalVisible] = useState(false);
+  const [signupModalVisible,setSignupModalVisible] = useState(false);
+  const [loggedin,setLoggedin] = useState(false);
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
@@ -11,6 +15,14 @@ export default function Main({setStatus}) {
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>setStatus(2)} style={styles.recipe}>
           <Image source={require('../assets/recipe.png')}></Image>
+        </TouchableOpacity> 
+        <LoginModal modalVisible={loginModalVisible} 
+        setModalVisible={setLoginModalVisible} setSignupModalVisible={setSignupModalVisible} setFoodList={setFoodList}/>
+        <LoginModal modalVisible={signupModalVisible} 
+        setModalVisible={setSignupModalVisible} setSignupModalVisible={setSignupModalVisible} 
+        setFoodList={setFoodList} loginFlag={false}/>
+        <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
+          <Text style={styles.textStyle}>Login</Text>
         </TouchableOpacity> 
       </ImageBackground>
     </FadeInView>

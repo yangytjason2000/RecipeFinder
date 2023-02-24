@@ -1,17 +1,24 @@
 import {Text, TouchableOpacity,} from 'react-native';
 import { styles } from '../styles';
-import { useState } from 'react';
-import FoodModal from './FoodModal';
-const Item = ({food,setName,setEmoji,setNumber,setDate,setFoodModalVisible}) => {
+const Item = ({food,setName,setEmoji,setNumber,setDate,setFoodModalVisible,isRecipe=false}) => {
     function setSelected(){
         setFoodModalVisible(true);
         setName(String(food.name));
         setEmoji(food.emoji);
         setNumber(food.quantity);
-        setDate(food.date);
+        if (!isRecipe){
+          setDate(new Date(food.date));
+        }
     }
-    return(<TouchableOpacity onPress={setSelected} style={styles.item}>
-      <Text style={styles.food}>{food.emoji+" "+food.name}</Text>
-    </TouchableOpacity>)
+    if (isRecipe){
+      return(<TouchableOpacity onPress={setSelected}>
+        <Text style={styles.food}>{food.emoji+" "+food.name}</Text>
+      </TouchableOpacity>)
+    }
+    else{
+      return(<TouchableOpacity onPress={setSelected} style={styles.item}>
+        <Text style={styles.food}>{food.emoji+" "+food.name}</Text>
+      </TouchableOpacity>)
+    }
 };
 export default Item;

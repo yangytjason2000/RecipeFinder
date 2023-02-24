@@ -1,10 +1,10 @@
-import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
+import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import { styles } from '../styles';
 import FoodModal from './FoodModal';
 import Item from './FoodItem';
-export default function Fridge({setStatus,foodList}) {
+export default function Fridge({setStatus,foodList,setFoodList,isRecipe=false}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [foodModalVisible,setFoodModalVisible] = useState(false);
   //name,emoji,number
@@ -18,25 +18,27 @@ export default function Fridge({setStatus,foodList}) {
   const [selectedNumber,setSelectedNumber] = useState('');
   const [selectedDate,setSelectedDate] = useState(new Date());
   return (
-    <View style={styles.fridgeContainer}>
+    <View style={isRecipe ?styles.recipeContainer : styles.fridgeContainer}>
       <SafeAreaView style={styles.container}>
       <FlatList
         data={foodList}
         renderItem={({item}) => <Item food={item} setName={setSelectedName} setEmoji={setSelectedEmoji} 
-        setNumber={setSelectedNumber} setDate={setSelectedDate} setFoodModalVisible={setFoodModalVisible}/>}
+        setNumber={setSelectedNumber} setDate={setSelectedDate} 
+        setFoodModalVisible={setFoodModalVisible} isRecipe={isRecipe}/>}
       />
       </SafeAreaView>
       <FoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} name={name} emoji={emoji} number={number} date={date}
-      setName={setName} setEmoji={setEmoji} setNumber={setNumber} setDate={setDate}/>
+      setName={setName} setEmoji={setEmoji} setNumber={setNumber} setDate={setDate} setFoodList={setFoodList} isRecipe={isRecipe}/>
       <FoodModal modalVisible={foodModalVisible} setModalVisible={setFoodModalVisible} 
       name={selectedName} emoji={selectedEmoji} number={selectedNumber} date={selectedDate} 
-      setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setDate={setSelectedDate} deleteFlag={true}/>
+      setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} 
+      setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={isRecipe}/>
       <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.button,styles.buttonClose]}>
-      <Text style={styles.textStyle}>Add</Text>
+        <Text style={styles.textStyle}>Add Food</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
-      <Text style={styles.textStyle}>Back</Text>
-      </TouchableOpacity>
+      {!isRecipe && <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
+        <Text style={styles.textStyle}>Back</Text>
+      </TouchableOpacity>}
     </View>
   );
 }

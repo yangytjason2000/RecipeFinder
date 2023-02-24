@@ -3,18 +3,18 @@ import { useState, useEffect} from 'react';
 import  Main  from './components/Main.js';
 import Fridge from './components/Fridge.js';
 import Recipe from './components/Recipe.js';
-import { getFood } from './components/getFood.js';
 export default function App() {
   const [status,setStatus]=useState(0);
   const [foodList, setFoodList] = useState([]);
-  getFood(setFoodList);
+  const [recipeList,setRecipeList] = useState([]);
+  const [token,setToken] = useState();
   if (status==0){
-    return (<Main setStatus={setStatus}/>);
+    return (<Main setStatus={setStatus} setFoodList={setFoodList}/>);
   }
   else if (status==1){
-    return (<Fridge setStatus={setStatus} foodList={foodList}/>);
+    return (<Fridge setStatus={setStatus} foodList={foodList} setFoodList={setFoodList}/>);
   }
   else if (status==2){
-    return (<Recipe setStatus={setStatus}/>);
+    return (<Recipe setStatus={setStatus} recipeList={recipeList} setRecipeList={setRecipeList}/>);
   }
 }
