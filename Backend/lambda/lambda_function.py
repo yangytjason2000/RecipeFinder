@@ -1,8 +1,10 @@
 import boto3
 import json
+import re
 
 METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
+ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
 
 def lambda_handler(event, context):
 
@@ -37,8 +39,14 @@ def post_item(table, payload):
     if not valid:
         return serialize_invalid_response(item)
 
+    if 'date' in item:
+        date = item['date']
+        match = re.fullmatch(ISO8601, date)
+        if match is None:
+            return serialize_invalid_response(f'Invalid date: {date}')
+
     table.put_item(Item=item)
-    return serialize_correct_response()
+    return get_item(table)
 
 def delete_item(table, payload):
     valid, item = validate_payload(payload)
@@ -46,7 +54,7 @@ def delete_item(table, payload):
         return serialize_invalid_response(item)
 
     table.delete_item(Key={'name': item['name']})
-    return serialize_correct_response()
+    return get_item(table)
 
 def validate_payload(payload):
     try:
