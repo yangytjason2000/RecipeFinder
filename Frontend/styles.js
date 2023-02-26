@@ -97,11 +97,11 @@ export  const styles = StyleSheet.create({
       textAlign: 'center',
     },
     input: {
-      height: 40,
+      height: 50,
       margin: 12,
       borderWidth: 1,
       padding: 10,
       width: 150,
-      fontSize: 25,
+      fontSize: 20,
     },
   });

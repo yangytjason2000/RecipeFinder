@@ -2,7 +2,7 @@ import boto3
 import json
 
 METHODS = set(['GET', 'POST', 'DELETE'])
-TABLES = set(['ingredient'])
+TABLES = set(['ingredient','recipe'])
 
 def lambda_handler(event, context):
 

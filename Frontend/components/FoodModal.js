@@ -57,7 +57,7 @@ async function addFood(name,number,emoji,date,setFoodList){
     "quantity": number,
     "date": date,
   }
-  await fetch('https://a4o8ta8sa4.execute-api.us-east-2.amazonaws.com/prod/ingredient',{
+  await fetch('https://xj8samw1ed.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
     method: "POST",
     body: JSON.stringify(message),
   })
@@ -71,7 +71,7 @@ async function removeFood(name,number,emoji,date,setFoodList){
     "quantity": number,
     "date": date,
   }
-  await fetch('https://a4o8ta8sa4.execute-api.us-east-2.amazonaws.com/prod/ingredient',{
+  await fetch('https://xj8samw1ed.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
     method: "DELETE",
     body: JSON.stringify(message),
   })
