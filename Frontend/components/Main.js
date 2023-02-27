@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, Animated } from 'react-native';
 import { useState, useRef, useEffect} from 'react';
 import { FadeInView } from './FadeInView';
+import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import LoginModal from './LoginModal';
-export default function Main({setStatus,setFoodList}) {
+export default function Main({setStatus,setFoodList,signedIn,setSignedIn}) {
   const [loginModalVisible,setLoginModalVisible] = useState(false);
   const [signupModalVisible,setSignupModalVisible] = useState(false);
-  const [loggedin,setLoggedin] = useState(false);
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
@@ -16,15 +16,27 @@ export default function Main({setStatus,setFoodList}) {
         <TouchableOpacity onPress={()=>setStatus(2)} style={styles.recipe}>
           <Image source={require('../assets/recipe.png')}></Image>
         </TouchableOpacity> 
-        <LoginModal modalVisible={loginModalVisible} 
-        setModalVisible={setLoginModalVisible} setSignupModalVisible={setSignupModalVisible} setFoodList={setFoodList}/>
-        <LoginModal modalVisible={signupModalVisible} 
+        {!signedIn && <LoginModal modalVisible={loginModalVisible} 
+        setModalVisible={setLoginModalVisible} setSignupModalVisible={setSignupModalVisible} 
+        setFoodList={setFoodList} setSignedIn={setSignedIn}/>}
+        {!signedIn && <LoginModal modalVisible={signupModalVisible} 
         setModalVisible={setSignupModalVisible} setSignupModalVisible={setSignupModalVisible} 
-        setFoodList={setFoodList} loginFlag={false}/>
-        <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
-          <Text style={styles.textStyle}>Login</Text>
-        </TouchableOpacity> 
+        setFoodList={setFoodList} setSignedIn={setSignedIn} loginFlag={false}/>}
+        {!signedIn && <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
+          <Text style={styles.textStyle}>Sign in</Text>
+        </TouchableOpacity>}
+        {signedIn && <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>signOut(setSignedIn)}>
+          <Text style={styles.textStyle}>Sign out</Text>
+        </TouchableOpacity>}
       </ImageBackground>
     </FadeInView>
   );
+}
+async function signOut(setSignedIn) {
+  try {
+      await Auth.signOut();
+      setSignedIn(false);
+  } catch (error) {
+      console.log('error signing out: ', error);
+  }
 }

@@ -1,6 +1,7 @@
 import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
+import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -60,8 +61,13 @@ async function addFood(name,number,emoji,date,setFoodList){
   await fetch('https://xj8samw1ed.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
     method: "POST",
     body: JSON.stringify(message),
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
   })
-  .then(response => {console.log(response.status); return response.json();})
+  .then(response => response.json())
   .then(response=>setFoodList(response))
 }
 async function removeFood(name,number,emoji,date,setFoodList){
@@ -74,6 +80,11 @@ async function removeFood(name,number,emoji,date,setFoodList){
   await fetch('https://xj8samw1ed.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
     method: "DELETE",
     body: JSON.stringify(message),
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
   })
   .then(response => {console.log(response.status); return response.json();})
   .then(response=>setFoodList(response))

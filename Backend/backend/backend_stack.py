@@ -6,16 +6,16 @@ from aws_cdk import (
     aws_cognito as cognito
 )
 from constructs import Construct
-
 class BackendStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        user_pool = cognito.UserPool(self, 'user_pool')
+        user_pool = cognito.UserPool(self, 'user_pool',self_sign_up_enabled=True,auto_verify=cognito.AutoVerifiedAttrs(email=True))
         user_pool.add_client('app_client', 
-            auth_flows=cognito.AuthFlow(user_password=True),
-            supported_identity_providers=[cognito.UserPoolClientIdentityProvider.COGNITO]
+            auth_flows=cognito.AuthFlow(user_password=True,user_srp=True),
+            supported_identity_providers=[cognito.UserPoolClientIdentityProvider.COGNITO],
+            
         )
         auth = apigw.CognitoUserPoolsAuthorizer(self, 'authentication',
             cognito_user_pools=[user_pool],
