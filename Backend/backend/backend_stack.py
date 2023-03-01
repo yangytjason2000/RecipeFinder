@@ -26,7 +26,7 @@ class BackendStack(Stack):
             self, "ingredient",
             table_name="ingredient",
             partition_key=dynamodb.Attribute(
-                name="name",
+                name="username",
                 type=dynamodb.AttributeType.STRING
             )
         )

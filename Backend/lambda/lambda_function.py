@@ -1,4 +1,5 @@
 import boto3
+from boto3.dynamodb.conditions import Key
 import json
 import re
 
@@ -17,20 +18,24 @@ def lambda_handler(event, context):
         return serialize_invalid_response(f'Invalid resource name: {table_name}')
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
-
     if method == 'GET':
-        return get_item(table)
+        return get_item(table,event['body'])
     if method == 'POST':
         return post_item(table, event['body'])
     if method == 'DELETE':
         return delete_item(table, event['body'])
 
-def get_item(table):
+def get_item(table,payload):
+    valid, item = validate_payload(payload)
+    if not valid:
+        return serialize_invalid_response(item)
+    partition_key_value=item['username']
     items = []
-    response = table.scan()
+    response = table.query(KeyConditionExpression=Key('username').eq(partition_key_value))
     items.extend(response['Items'])
     while 'LastEvaluatedKey' in response:
-        response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+        response = table.query(KeyConditionExpression=Key('username').eq(partition_key_value),
+                               ExclusiveStartKey=response['LastEvaluatedKey'])
         items.extend(response['Items'])
     return serialize_correct_response(items)
 
@@ -46,7 +51,7 @@ def post_item(table, payload):
             return serialize_invalid_response(f'Invalid date: {date}')
 
     table.put_item(Item=item)
-    return get_item(table)
+    return get_item(table,payload)
 
 def delete_item(table, payload):
     valid, item = validate_payload(payload)
@@ -54,7 +59,7 @@ def delete_item(table, payload):
         return serialize_invalid_response(item)
 
     table.delete_item(Key={'name': item['name']})
-    return get_item(table)
+    return get_item(table,payload)
 
 def validate_payload(payload):
     try:

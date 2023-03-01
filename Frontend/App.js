@@ -4,6 +4,7 @@ import  Main  from './components/Main.js';
 import Amplify,{ Auth } from '@aws-amplify/core';
 import Fridge from './components/Fridge.js';
 import Recipe from './components/Recipe.js';
+import { getFood } from './components/getFood.js';
 export default function App() {
   Amplify.configure({
     Auth: {
@@ -16,10 +17,10 @@ export default function App() {
         // Required only if it's different from Amazon Cognito Region
   
         // OPTIONAL - Amazon Cognito User Pool ID
-        userPoolId: 'us-west-1_YvAsM4N3n',
+        userPoolId: 'us-west-1_sAxB71axJ',
   
         // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-        userPoolWebClientId: 'hdclag2n22cgeuom87t5fousm',
+        userPoolWebClientId: '5vdm27ehp37v8fgvne1tvimks',
     }
   });
   const [status,setStatus]=useState(0);
@@ -30,12 +31,9 @@ export default function App() {
     const confirmSignedIn = async() => {
       try {
         await Auth.currentAuthenticatedUser();
-        console.log('correct');
         setSignedIn(true);
       } catch {
-        console.log('incorrect');
         setSignedIn(false);
-        console.log(signedIn);
       }
     }
     confirmSignedIn();

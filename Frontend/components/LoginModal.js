@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Alert, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import { FadeInView } from './FadeInView';
@@ -25,7 +25,7 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             <Text>Username</Text>
             <TextInput style={styles.input} onChangeText={setUsername} value={username}/>
             <Text>Password</Text>
-            <TextInput style={styles.input} onChangeText={setPassword} value={password}/>
+            <TextInput style={styles.input} onChangeText={setPassword} value={password} secureTextEntry={true}/>
             {!loginFlag && <Text>Email</Text>}
             {!loginFlag && <TextInput style={styles.input} onChangeText={setUserEmail} value={useremail}/>}
             {(!loginFlag && emailsent) && <Text>Confirmation Code</Text>}
@@ -40,9 +40,9 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
               onPress={()=> {setModalVisible(false);setSignupModalVisible(true);}}>
               <Text style={styles.textStyle}>Sign Up</Text>
             </TouchableOpacity>}
-            {!loginFlag && <TouchableOpacity
+            {(!loginFlag && !emailsent) && <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> signUp(username,password,useremail)}>
+              onPress={()=> signUp(username,password,useremail,setEmailSent)}>
               <Text style={styles.textStyle}>Sign Up</Text>
             </TouchableOpacity>}
             {(!loginFlag && emailsent) && <TouchableOpacity
@@ -69,7 +69,7 @@ async function confirm(username,confirmation) {
     console.log(err);
   });
 }
-async function signUp(username,password,email) {
+async function signUp(username,password,email,setEmailSent) {
   console.log(username);
   try {
       const { user } = await Auth.signUp({
@@ -85,7 +85,7 @@ async function signUp(username,password,email) {
       console.log(user);
       setEmailSent(true);
   } catch (error) {
-      console.log('error signing up:', error);
+      console.log(error);
   }
 }
 async function signIn(username,password,setSignedIn) {
@@ -100,6 +100,6 @@ async function signIn(username,password,setSignedIn) {
       console.log(user);
       setSignedIn(true);
   } catch (error) {
-      console.log('error sigining in:', error);
+      console.log(error)
   }
 }
