@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, Animated } from 'react-native';
+import { StyleSheet, Text, View,ImageBackground, TouchableOpacity, Image, Animated, SafeAreaView } from 'react-native';
 import { useState, useRef, useEffect} from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';

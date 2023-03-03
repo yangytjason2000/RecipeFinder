@@ -17,7 +17,9 @@ export  const styles = StyleSheet.create({
     },
     imageBackground: {
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
+      paddingBottom: '10%',
+      paddingHorizontal: '5%',
     },
     fridge: {
       position:'absolute',
