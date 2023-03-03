@@ -72,7 +72,7 @@ async function addRecipe(name,ingredient,method,setRecipeList){
     "ingredient": ingredient,
     "method": method,
   }
-  await fetch('https://v4o0dzr6rl.execute-api.us-west-1.amazonaws.com/prod/recipe',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
     method: "POST",
     body: JSON.stringify(message),
   })
@@ -85,7 +85,7 @@ async function removeRecipe(name,ingredient,method){
     "ingredient": ingredient,
     "method": method
   }
-  await fetch('https://v4o0dzr6rl.execute-api.us-west-1.amazonaws.com/prod/recipe',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
     method: "DELETE",
     body: JSON.stringify(message),
   })

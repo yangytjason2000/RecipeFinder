@@ -17,10 +17,10 @@ export default function App() {
         // Required only if it's different from Amazon Cognito Region
   
         // OPTIONAL - Amazon Cognito User Pool ID
-        userPoolId: 'us-west-1_sAxB71axJ',
+        userPoolId: 'us-west-1_00EyNRs0W',
   
         // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-        userPoolWebClientId: '5vdm27ehp37v8fgvne1tvimks',
+        userPoolWebClientId: 'm44i4l7u5j031rrdm3ffeu4q3',
     }
   });
   const [status,setStatus]=useState(0);

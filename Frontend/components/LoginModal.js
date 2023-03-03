@@ -2,6 +2,7 @@ import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, Touc
 import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import { FadeInView } from './FadeInView';
+import { getFood } from './getFood';
 import { styles } from '../styles';
 
 export default function LoginModal({modalVisible,setModalVisible,setSignupModalVisible,
@@ -32,7 +33,7 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             {(!loginFlag && emailsent) && <TextInput style={styles.input} onChangeText={setConfirmation} value={confirmation}/>}
             {loginFlag && <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> signIn(username,password,setSignedIn)}>
+                onPress={()=> {signIn(username,password,setSignedIn);getFood(setFoodList);}}>
                 <Text style={styles.textStyle}>Login</Text>
             </TouchableOpacity>}
             {loginFlag && <TouchableOpacity
@@ -47,7 +48,7 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             </TouchableOpacity>}
             {(!loginFlag && emailsent) && <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> confirm(username,confirmation)}>
+              onPress={()=> confirm(username,confirmation,setSignedIn)}>
               <Text style={styles.textStyle}>Confirm</Text>
             </TouchableOpacity>}
             <TouchableOpacity
@@ -60,17 +61,17 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
         </Modal>
   );
 }
-async function confirm(username,confirmation) {
+async function confirm(username,confirmation,setSignedIn) {
   await Auth.confirmSignUp(username, confirmation)
   .then(data => {
     console.log(data);
+    setSignedIn(true);
   })
   .catch(err => {
     console.log(err);
   });
 }
 async function signUp(username,password,email,setEmailSent) {
-  console.log(username);
   try {
       const { user } = await Auth.signUp({
           username,
@@ -78,11 +79,10 @@ async function signUp(username,password,email,setEmailSent) {
           attributes:{
             email: email,
           },
-          autoSignIn: { // optional - enables auto sign in after user is confirmed
+          autoSignIn: {
               enabled: true,
           }
       });
-      console.log(user);
       setEmailSent(true);
   } catch (error) {
       console.log(error);
@@ -93,11 +93,7 @@ async function signIn(username,password,setSignedIn) {
       const { user } = await Auth.signIn({
           username,
           password,
-          autoSignIn: { // optional - enables auto sign in after user is confirmed
-              enabled: true,
-          }
       });
-      console.log(user);
       setSignedIn(true);
   } catch (error) {
       console.log(error)

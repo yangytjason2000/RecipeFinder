@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, ActivityIndicator, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
@@ -8,7 +8,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number=''
 ,date=new Date(),setName,setNumber,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
-  const [username,setUserName]=useState('');
+  const [username,setUserName] = useState('');
+  const [isLoading,setIsLoading] = useState(false);
   return (
         <Modal
           animationType="slide"
@@ -30,17 +31,18 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> {getUsername(setUserName);addFood(name,number,emoji,date,setFoodList,username)}}>
+                onPress={()=> {addFood(name,number,emoji,date,setFoodList)}}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> {getUsername(setUserName);addFood(name,number,emoji,date,setFoodList,username)}}>
+              onPress={()=> addFood(name,number,emoji,date,setFoodList)}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
+            {isLoading && <Text>here</Text>}
             {deleteFlag && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> {getUsername(setUserName);removeFood(name,number,emoji,date,setFoodList)}}>
+              onPress={()=> {removeFood(name,number,emoji,date,setFoodList)}}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity
@@ -53,18 +55,14 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         </Modal>
   );
 }
-async function addFood(name,number,emoji,date,setFoodList,username){
-  if (username===null){
-    return;
-  }
+async function addFood(name,number,emoji,date,setFoodList){
   const message={
-    "username": username,
     "name": name,
     "emoji": emoji,
     "quantity": number,
     "date": date,
   }
-  await fetch('https://v4o0dzr6rl.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
     method: "POST",
     body: JSON.stringify(message),
     headers: {
@@ -76,15 +74,14 @@ async function addFood(name,number,emoji,date,setFoodList,username){
   .then(response => response.json())
   .then(response=>setFoodList(response))
 }
-async function removeFood(name,number,emoji,date,setFoodList,username){
+async function removeFood(name,number,emoji,date,setFoodList){
   const message={
-    "username": username,
     "name": name,
     "emoji": emoji,
     "quantity": number,
     "date": date,
   }
-  await fetch('https://v4o0dzr6rl.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
     method: "DELETE",
     body: JSON.stringify(message),
     headers: {
@@ -93,6 +90,6 @@ async function removeFood(name,number,emoji,date,setFoodList,username){
         .getJwtToken()}`
     }
   })
-  .then(response => {console.log(response.status); return response.json();})
+  .then(response => response.json())
   .then(response=>setFoodList(response))
 }

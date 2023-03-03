@@ -28,6 +28,10 @@ class BackendStack(Stack):
             partition_key=dynamodb.Attribute(
                 name="username",
                 type=dynamodb.AttributeType.STRING
+            ),
+            sort_key=dynamodb.Attribute(
+                name="name",
+                type=dynamodb.AttributeType.STRING
             )
         )
 
@@ -35,6 +39,10 @@ class BackendStack(Stack):
             self,"recipe",
             table_name="recipe",
             partition_key=dynamodb.Attribute(
+                name="username",
+                type=dynamodb.AttributeType.STRING
+            ),
+            sort_key=dynamodb.Attribute(
                 name="name",
                 type=dynamodb.AttributeType.STRING
             )
