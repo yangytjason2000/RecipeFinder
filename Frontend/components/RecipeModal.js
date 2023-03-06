@@ -1,6 +1,7 @@
 import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
+import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import Fridge from './Fridge';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -75,8 +76,13 @@ async function addRecipe(name,ingredient,method,setRecipeList){
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
     method: "POST",
     body: JSON.stringify(message),
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
   })
-  .then(response => {console.log(response.status); return response.json();})
+  .then(response => response.json())
   .then(response => setRecipeList(response))
 }
 async function removeRecipe(name,ingredient,method){
@@ -88,7 +94,12 @@ async function removeRecipe(name,ingredient,method){
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
     method: "DELETE",
     body: JSON.stringify(message),
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
   })
-  .then(response => {console.log(response.status); return response.json();})
+  .then(response => response.json())
   .then(response => setRecipeList(response))
 }

@@ -1,32 +1,10 @@
 import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
+
 import { styles } from '../styles';
 import RecipeModal from './RecipeModal';
 import Item from './RecipeItem';
-const DATA = [
-  {
-    name:'gongbao',
-    ingredient: [{name:'rou',emoji:'rou',quantity:'1'},{name:'rou',emoji:'rou',quantity:'1'},
-    {name:'rou',emoji:'rou',quantity:'1'},{name:'rou',emoji:'rou',quantity:'1'}],
-    method:'cook',
-  },
-  {
-    name:'gongbao',
-    ingredient: [{name:'rou',emoji:'rou',quantity:'1'}],
-    method:'cook',
-  },
-  {
-    name:'gongbao',
-    ingredient: [{name:'rou',emoji:'rou',quantity:'1'}],
-    method:'cook',
-  },
-  {
-    name:'gongbao',
-    ingredient: [{name:'rou',emoji:'rou',quantity:'1'}],
-    method:'cook',
-  },
-];
 export default function Recipe({setStatus,recipeList,setRecipeList}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
@@ -42,7 +20,7 @@ export default function Recipe({setStatus,recipeList,setRecipeList}) {
     <View style={styles.fridgeContainer}>
       <SafeAreaView style={styles.container}>
       <FlatList
-        data={DATA}
+        data={recipeList}
         renderItem={({item}) => <Item recipe={item} setName={setSelectedName} setIngredient={setSelectedIngredient}
         setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible}/>}
       />

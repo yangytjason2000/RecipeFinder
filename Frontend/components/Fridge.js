@@ -27,10 +27,11 @@ export default function Fridge({setStatus,foodList,setFoodList,isRecipe=false}) 
         setFoodModalVisible={setFoodModalVisible} isRecipe={isRecipe}/>}
       />
       </SafeAreaView>
-      <FoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} name={name} emoji={emoji} number={number} date={date}
+      <FoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
+      name={name} emoji={emoji} number={number} date={date} foodList={foodList}
       setName={setName} setEmoji={setEmoji} setNumber={setNumber} setDate={setDate} setFoodList={setFoodList} isRecipe={isRecipe}/>
       <FoodModal modalVisible={foodModalVisible} setModalVisible={setFoodModalVisible} 
-      name={selectedName} emoji={selectedEmoji} number={selectedNumber} date={selectedDate} 
+      name={selectedName} emoji={selectedEmoji} number={selectedNumber} date={selectedDate} foodList={foodList}
       setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} 
       setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={isRecipe}/>
       <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.button,styles.buttonClose]}>

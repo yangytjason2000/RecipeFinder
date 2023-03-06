@@ -7,8 +7,7 @@ import { styles } from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number=''
-,date=new Date(),setName,setNumber,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
-  const [username,setUserName] = useState('');
+,date=new Date(),foodList=[],setName,setNumber,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
   const [isLoading,setIsLoading] = useState(false);
   return (
         <Modal
@@ -36,10 +35,10 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> addFood(name,number,emoji,date,setFoodList)}>
+              onPress={()=> isRecipe ? addRecipeFood(name,number,emoji,foodList,setFoodList) 
+              : addFood(name,number,emoji,date,setFoodList)}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
-            {isLoading && <Text>here</Text>}
             {deleteFlag && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
               onPress={()=> {removeFood(name,number,emoji,date,setFoodList)}}>
@@ -54,6 +53,10 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         </View>
         </Modal>
   );
+}
+function addRecipeFood(name,number,emoji,foodList,setFoodList){
+  const newList = foodList.concat({ name:name,number:number,emoji:emoji });
+  setFoodList(newList);
 }
 async function addFood(name,number,emoji,date,setFoodList){
   const message={
