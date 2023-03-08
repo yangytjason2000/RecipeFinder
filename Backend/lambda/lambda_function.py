@@ -66,7 +66,7 @@ def delete_item(table, payload,username):
     if not valid:
         return serialize_invalid_response(item)
 
-    table.delete_item(Key={'name': item['name']})
+    table.delete_item(Key={'username': username,'name': item['name']})
     return get_item(table,username)
 
 def validate_payload(payload):

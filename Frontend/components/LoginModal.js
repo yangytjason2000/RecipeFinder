@@ -3,10 +3,11 @@ import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import { FadeInView } from './FadeInView';
 import { getFood } from './getFood';
+import { getRecipe } from './getRecipe';
 import { styles } from '../styles';
 
 export default function LoginModal({modalVisible,setModalVisible,setSignupModalVisible,
-  setFoodList,setSignedIn,loginFlag=true}) {
+  setFoodList,setRecipeList,setSignedIn,loginFlag=true}) {
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
     const [useremail,setUserEmail] = useState('');
@@ -33,7 +34,7 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             {(!loginFlag && emailsent) && <TextInput style={styles.input} onChangeText={setConfirmation} value={confirmation}/>}
             {loginFlag && <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> {signIn(username,password,setSignedIn);getFood(setFoodList);}}>
+                onPress={()=> {signIn(username,password,setSignedIn);getFood(setFoodList);getRecipe(setRecipeList)}}>
                 <Text style={styles.textStyle}>Login</Text>
             </TouchableOpacity>}
             {loginFlag && <TouchableOpacity

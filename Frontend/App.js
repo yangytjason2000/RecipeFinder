@@ -39,7 +39,8 @@ export default function App() {
     confirmSignedIn();
     },[])
   if (status==0){
-    return (<Main setStatus={setStatus} setFoodList={setFoodList} signedIn={signedIn} setSignedIn={setSignedIn}/>);
+    return (<Main setStatus={setStatus} setFoodList={setFoodList} setRecipeList={setRecipeList}
+      signedIn={signedIn} setSignedIn={setSignedIn}/>);
   }
   else if (status==1){
     return (<Fridge setStatus={setStatus} foodList={foodList} setFoodList={setFoodList}/>);

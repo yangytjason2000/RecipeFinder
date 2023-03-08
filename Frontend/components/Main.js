@@ -4,7 +4,7 @@ import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import LoginModal from './LoginModal';
-export default function Main({setStatus,setFoodList,signedIn,setSignedIn}) {
+export default function Main({setStatus,setFoodList,setRecipeList,signedIn,setSignedIn}) {
   const [loginModalVisible,setLoginModalVisible] = useState(false);
   const [signupModalVisible,setSignupModalVisible] = useState(false);
   return (
@@ -18,10 +18,10 @@ export default function Main({setStatus,setFoodList,signedIn,setSignedIn}) {
         </TouchableOpacity> 
         {!signedIn && <LoginModal modalVisible={loginModalVisible} 
         setModalVisible={setLoginModalVisible} setSignupModalVisible={setSignupModalVisible} 
-        setFoodList={setFoodList} setSignedIn={setSignedIn}/>}
+        setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn}/>}
         {!signedIn && <LoginModal modalVisible={signupModalVisible} 
         setModalVisible={setSignupModalVisible} setSignupModalVisible={setSignupModalVisible} 
-        setFoodList={setFoodList} setSignedIn={setSignedIn} loginFlag={false}/>}
+        setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn} loginFlag={false}/>}
         {!signedIn && <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
           <Text style={styles.textStyle}>Sign in</Text>
         </TouchableOpacity>}

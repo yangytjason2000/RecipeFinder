@@ -15,6 +15,9 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
       setModalVisible(!modalVisible);
       setIsEditingName(false);
       setIsEditingMethod(false);
+      setName('');
+      setMethod('');
+      setIngredient([]);
     }
   return (
       <Modal
