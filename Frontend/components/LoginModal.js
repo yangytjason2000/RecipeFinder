@@ -34,7 +34,7 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             {(!loginFlag && emailsent) && <TextInput style={styles.input} onChangeText={setConfirmation} value={confirmation}/>}
             {loginFlag && <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> {signIn(username,password,setSignedIn);getFood(setFoodList);getRecipe(setRecipeList)}}>
+                onPress={()=> signIn(username,password,setSignedIn,setFoodList,setRecipeList,setModalVisible)}>
                 <Text style={styles.textStyle}>Login</Text>
             </TouchableOpacity>}
             {loginFlag && <TouchableOpacity
@@ -89,13 +89,13 @@ async function signUp(username,password,email,setEmailSent) {
       console.log(error);
   }
 }
-async function signIn(username,password,setSignedIn) {
+async function signIn(username,password,setSignedIn,setFoodList,setRecipeList,setModalVisible) {
   try {
-      const { user } = await Auth.signIn({
+      await Auth.signIn({
           username,
           password,
-      });
-      setSignedIn(true);
+      })
+      .then(response=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);setModalVisible(false)})
   } catch (error) {
       console.log(error)
   }

@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View,ImageBackground, TouchableOpacity, Image, Animated, SafeAreaView } from 'react-native';
 import { useState, useRef, useEffect} from 'react';
 import { FadeInView } from './FadeInView';
-import Amplify,{ Auth } from 'aws-amplify';
+import Amplify,{API, Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import LoginModal from './LoginModal';
 export default function Main({setStatus,setFoodList,setRecipeList,signedIn,setSignedIn}) {
   const [loginModalVisible,setLoginModalVisible] = useState(false);
   const [signupModalVisible,setSignupModalVisible] = useState(false);
+  console.log(loginModalVisible);
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
@@ -34,8 +35,9 @@ export default function Main({setStatus,setFoodList,setRecipeList,signedIn,setSi
 }
 async function signOut(setSignedIn) {
   try {
-      await Auth.signOut();
-      setSignedIn(false);
+      await Auth.signOut({ global: true })
+      .then(response=>setSignedIn(false));
+      console.log('finished')
   } catch (error) {
       console.log('error signing out: ', error);
   }
