@@ -1,4 +1,4 @@
-import { Modal, ActivityIndicator, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
@@ -19,6 +19,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
+          <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
           <View style={styles.modalView}>
             <Text style={styles.title}>name</Text>
             <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>
@@ -50,6 +51,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
               <Text style={styles.textStyle}>Back</Text>
             </TouchableOpacity>
           </View>
+          </TouchableWithoutFeedback>
         </View>
         </Modal>
   );

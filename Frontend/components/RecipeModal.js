@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Image, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
@@ -29,6 +29,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         setModalVisible(!modalVisible);
       }}>
       <View style={styles.centeredView}>
+        <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.modalView}>
         {(!isEditingName && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingName(!isEditingName)}>
@@ -48,7 +49,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         {(isAdd) &&
         <Text style={styles.title}>Method</Text>}
         {(isEditingMethod || isAdd) &&
-        <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method}/>}
+        <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
 
         <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
@@ -66,6 +67,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
           <Text style={styles.textStyle}>Back</Text>
         </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </View>
       </Modal>
   );
@@ -88,7 +90,7 @@ async function addRecipe(name,ingredient,method,setRecipeList){
   .then(response => response.json())
   .then(response => setRecipeList(response))
 }
-async function removeRecipe(name,ingredient,method){
+async function removeRecipe(name,ingredient,method,setRecipeList){
   const message={
     "name": name,
     "ingredient": ingredient,
