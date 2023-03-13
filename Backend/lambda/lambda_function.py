@@ -12,18 +12,22 @@ def lambda_handler(event, context):
     method = event['httpMethod']
     if method not in METHODS:
         return serialize_invalid_response(f'Unsupported HTTP method: {method}')
-    table_name = event['path'][1:]
+    table_name = event['path'][1:].split('/')[0]
     if table_name not in TABLES:
         return serialize_invalid_response(f'Invalid resource name: {table_name}')
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
     username = get_username(event)
     if method == 'GET':
+        if len(event['path'][1:].split('/'))>1:
+            return recommend_item(table,username)
         return get_item(table,username)
     if method == 'POST':
+        if len(event['path'][1:].split('/'))>1:
+            return consume_item(table, event['body'],username)
         return post_item(table, event['body'],username)
     if method == 'DELETE':
-        return delete_item(table, event['body'],username)
+        return delete_item(table, event['body'],username) 
 
 def get_username(event):
     # Extract the token from the Authorization header
@@ -35,6 +39,21 @@ def get_username(event):
     username = decoded_token['cognito:username']
     return username
 
+def recommend_item(table,username,item_number=1):
+    if item_number < 0:
+        return serialize_invalid_response('Not a valid number')
+    items = []
+    response = table.query(KeyConditionExpression=Key('username').eq(username))
+    items.extend(response['Items'])
+    while 'LastEvaluatedKey' in response:
+        response = table.query(KeyConditionExpression=Key('username').eq(username),
+                            ExclusiveStartKey=response['LastEvaluatedKey'])
+        items.extend(response['Items'])
+    if (len(items)>=item_number):
+        items = sorted(items,key = lambda x: x['date'])[:item_number]
+    return serialize_correct_response(items)
+
+
 def get_item(table,username):
     items = []
     response = table.query(KeyConditionExpression=Key('username').eq(username))
@@ -43,10 +62,24 @@ def get_item(table,username):
         response = table.query(KeyConditionExpression=Key('username').eq(username),
                             ExclusiveStartKey=response['LastEvaluatedKey'])
         items.extend(response['Items'])
-    print(items)
     return serialize_correct_response(items)
 
 def post_item(table, payload,username):
+    valid, item = validate_payload(payload)
+    if not valid:
+        return serialize_invalid_response(item)
+
+    if 'date' in item:
+        date = item['date']
+        match = re.fullmatch(ISO8601, date)
+        if match is None:
+            return serialize_invalid_response(f'Invalid date: {date}')
+
+    item['username'] = username
+    table.put_item(Item=item)
+    return get_item(table,username)
+
+def consume_item(table, payload,username):
     valid, item = validate_payload(payload)
     if not valid:
         return serialize_invalid_response(item)

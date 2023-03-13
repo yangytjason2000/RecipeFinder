@@ -7,7 +7,6 @@ import LoginModal from './LoginModal';
 export default function Main({setStatus,setFoodList,setRecipeList,signedIn,setSignedIn}) {
   const [loginModalVisible,setLoginModalVisible] = useState(false);
   const [signupModalVisible,setSignupModalVisible] = useState(false);
-  console.log(loginModalVisible);
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     

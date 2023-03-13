@@ -51,11 +51,16 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         {(isEditingMethod || isAdd) &&
         <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
 
-        <TouchableOpacity
+        {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
           onPress={() => addRecipe(name,ingredient,method,setRecipeList)}>
           <Text style={styles.textStyle}>Update Recipe</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
+        {isAdd && <TouchableOpacity
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => addRecipe(name,ingredient,method,setRecipeList)}>
+          <Text style={styles.textStyle}>Add Recipe</Text>
+        </TouchableOpacity>}
         <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
           onPress={() => removeRecipe(name,ingredient,method,setRecipeList)}>
@@ -77,6 +82,7 @@ async function addRecipe(name,ingredient,method,setRecipeList){
     "name": name,
     "ingredient": ingredient,
     "method": method,
+    "date": new Date(),
   }
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
     method: "POST",

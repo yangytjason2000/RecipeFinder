@@ -5,6 +5,7 @@ import Amplify,{ Auth } from '@aws-amplify/core';
 import Fridge from './components/Fridge.js';
 import Recipe from './components/Recipe.js';
 import { getFood } from './components/getFood.js';
+import { getRecipe } from './components/getRecipe.js';
 export default function App() {
   Amplify.configure({
     Auth: {
@@ -30,8 +31,8 @@ export default function App() {
   useEffect(()=>{
     const confirmSignedIn = async() => {
       try {
-        await Auth.currentAuthenticatedUser();
-        setSignedIn(true);
+        await Auth.currentAuthenticatedUser()
+        .then(()=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
       } catch {
         setSignedIn(false);
       }

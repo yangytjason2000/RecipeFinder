@@ -1,7 +1,7 @@
 import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
-
+import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import RecipeModal from './RecipeModal';
 import Item from './RecipeItem';
@@ -36,9 +36,24 @@ export default function Recipe({setStatus,recipeList,setRecipeList}) {
       <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={[styles.button,styles.buttonClose]}>
       <Text style={styles.textStyle}>Add</Text>
       </TouchableOpacity>
+      <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList)} style={[styles.button,styles.buttonClose]}>
+      <Text style={styles.textStyle}>Recommend</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
       <Text style={styles.textStyle}>Back</Text>
       </TouchableOpacity>
     </View>
   );
+}
+async function getRecommendRecipe(setRecipeList){
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe/recommend',{
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
+  })
+  .then(response => response.json())
+  .then(response => setRecipeList(response))
 }
