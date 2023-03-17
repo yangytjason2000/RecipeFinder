@@ -89,6 +89,9 @@ export  const styles = StyleSheet.create({
     buttonClose: {
       backgroundColor: '#2196F3',
     },
+    buttonConsume: {
+      backgroundColor: 'green',
+    },  
     textStyle: {
       color: 'white',
       fontWeight: 'bold',

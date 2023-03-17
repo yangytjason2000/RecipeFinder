@@ -25,7 +25,8 @@ def lambda_handler(event, context):
     if method == 'POST':
         if len(event['path'][1:].split('/'))>1:
             return consume_item(table, event['body'],username)
-        return post_item(table, event['body'],username)
+        else:
+            return post_item(table, event['body'],username)
     if method == 'DELETE':
         return delete_item(table, event['body'],username) 
 
@@ -64,7 +65,7 @@ def get_item(table,username):
         items.extend(response['Items'])
     return serialize_correct_response(items)
 
-def post_item(table, payload,username):
+def consume_item(table, payload,username):
     valid, item = validate_payload(payload)
     if not valid:
         return serialize_invalid_response(item)
@@ -74,12 +75,21 @@ def post_item(table, payload,username):
         match = re.fullmatch(ISO8601, date)
         if match is None:
             return serialize_invalid_response(f'Invalid date: {date}')
-
-    item['username'] = username
-    table.put_item(Item=item)
+    ingredients = item['ingredient']
+    for ingredient in ingredients:
+        response = table.get_item(Key={'username': username,'name': ingredient['name']})
+        if 'Item' not in response:
+            print('no ingredient')
+            continue
+        if int(response['Item']['quantity'])>=int(ingredient['quantity']):
+            response['Item']['quantity']=str(int(response['Item']['quantity'])-int(ingredient['quantity']))
+        else:
+            response['Item']['quantity'] = '0'
+            print('no enough ingredient')
+        table.put_item(Item=response['Item'])
     return get_item(table,username)
 
-def consume_item(table, payload,username):
+def post_item(table, payload, username):
     valid, item = validate_payload(payload)
     if not valid:
         return serialize_invalid_response(item)

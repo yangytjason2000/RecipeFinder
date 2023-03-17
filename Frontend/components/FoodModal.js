@@ -57,7 +57,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
   );
 }
 function addRecipeFood(name,number,emoji,foodList,setFoodList){
-  const newList = foodList.concat({ name:name,number:number,emoji:emoji });
+  const newList = foodList.concat({ name:name,quantity:number,emoji:emoji });
   setFoodList(newList);
 }
 async function addFood(name,number,emoji,date,setFoodList){

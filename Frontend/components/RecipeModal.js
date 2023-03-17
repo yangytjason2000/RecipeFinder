@@ -7,7 +7,7 @@ import Fridge from './Fridge';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
-    setName,setMethod,setIngredient,setRecipeList,isAdd=false}) {
+    setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
     const [status,setStatus] = useState(0);
     const [isEditingName,setIsEditingName] = useState(false);
     const [isEditingMethod,setIsEditingMethod] = useState(false);
@@ -50,7 +50,11 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         <Text style={styles.title}>Method</Text>}
         {(isEditingMethod || isAdd) &&
         <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
-
+        {!isAdd && <TouchableOpacity
+          style={[styles.button, styles.buttonConsume]}
+          onPress={() => consumeRecipe(name,ingredient,method,setFoodList)}>
+          <Text style={styles.textStyle}>Eat This!</Text>
+        </TouchableOpacity>}
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
           onPress={() => addRecipe(name,ingredient,method,setRecipeList)}>
@@ -113,4 +117,22 @@ async function removeRecipe(name,ingredient,method,setRecipeList){
   })
   .then(response => response.json())
   .then(response => setRecipeList(response))
+}
+async function consumeRecipe(name,ingredient,method,setFoodList){
+  const message={
+    "name": name,
+    "ingredient": ingredient,
+    "method": method
+  }
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient/consume',{
+    method: "POST",
+    body: JSON.stringify(message),
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
+  })
+  .then(response => response.json())
+  .then(response => setFoodList(response))
 }

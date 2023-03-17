@@ -28,6 +28,7 @@ export default function App() {
   const [foodList, setFoodList] = useState([]);
   const [recipeList,setRecipeList] = useState([]);
   const [signedIn,setSignedIn] = useState(false);
+  const [isRecommend,setIsRecommend] = useState(false);
   useEffect(()=>{
     const confirmSignedIn = async() => {
       try {
@@ -47,6 +48,7 @@ export default function App() {
     return (<Fridge setStatus={setStatus} foodList={foodList} setFoodList={setFoodList}/>);
   }
   else if (status==2){
-    return (<Recipe setStatus={setStatus} recipeList={recipeList} setRecipeList={setRecipeList}/>);
+    return (<Recipe setStatus={setStatus} recipeList={recipeList} setRecipeList={setRecipeList}
+    isRecommend={isRecommend} setIsRecommend={setIsRecommend} setFoodList={setFoodList}/>);
   }
 }

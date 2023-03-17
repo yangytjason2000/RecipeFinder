@@ -3,9 +3,10 @@ import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
+import { getRecipe } from './getRecipe';
 import RecipeModal from './RecipeModal';
 import Item from './RecipeItem';
-export default function Recipe({setStatus,recipeList,setRecipeList}) {
+export default function Recipe({setStatus,recipeList,setRecipeList,isRecommend,setIsRecommend,setFoodList}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
   //name,emoji,number
@@ -27,25 +28,32 @@ export default function Recipe({setStatus,recipeList,setRecipeList}) {
       </SafeAreaView>
       <RecipeModal modalVisible={addModalVisible} setModalVisible={setAddModalVisible} 
       name={name} ingredient={ingredient} method={method} 
-      setName={setName} setIngredient={setIngredient} setMethod={setMethod} setRecipeList={setRecipeList} isAdd={true}>
+      setName={setName} setIngredient={setIngredient} setMethod={setMethod} 
+      setRecipeList={setRecipeList} isAdd={true} setFoodList={setFoodList}>
       </RecipeModal>
       <RecipeModal modalVisible={RecipeModalVisible} setModalVisible={setRecipeModalVisible} 
       name={selectedName} ingredient={selectedIngredient} method={selectedMethod} 
-      setName={setSelectedName} setIngredient={setSelectedIngredient} setMethod={setSelectedMethod} setRecipeList={setRecipeList}>
+      setName={setSelectedName} setIngredient={setSelectedIngredient} setMethod={setSelectedMethod} 
+      setRecipeList={setRecipeList} setFoodList={setFoodList}>
       </RecipeModal>
       <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={[styles.button,styles.buttonClose]}>
       <Text style={styles.textStyle}>Add</Text>
       </TouchableOpacity>
-      <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList)} style={[styles.button,styles.buttonClose]}>
+      {!isRecommend && <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList,setIsRecommend)} 
+      style={[styles.button,styles.buttonClose]}>
       <Text style={styles.textStyle}>Recommend</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
+      {isRecommend && <TouchableOpacity  onPress={()=>getAllRecipe(setRecipeList,setIsRecommend)} 
+      style={[styles.button,styles.buttonClose]}>
+      <Text style={styles.textStyle}>Get All Recipes</Text>
+      </TouchableOpacity>}
       <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
       <Text style={styles.textStyle}>Back</Text>
       </TouchableOpacity>
     </View>
   );
 }
-async function getRecommendRecipe(setRecipeList){
+async function getRecommendRecipe(setRecipeList,setIsRecommend){
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe/recommend',{
     method: "GET",
     headers: {
@@ -55,5 +63,9 @@ async function getRecommendRecipe(setRecipeList){
     }
   })
   .then(response => response.json())
-  .then(response => setRecipeList(response))
+  .then(response => {setRecipeList(response);setIsRecommend(true)})
+}
+async function getAllRecipe(setRecipeList,setIsRecommend){
+  await getRecipe(setRecipeList)
+  .then(response => setIsRecommend(false))
 }
