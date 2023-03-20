@@ -11,7 +11,7 @@ export  const styles = StyleSheet.create({
       paddingHorizontal: '5%',
     },
     recipeContainer: {
-      flex: 0.8,
+      flex: 1,
       backgroundColor: 'white',
       justifyContent: 'space-between',
     },
@@ -48,10 +48,10 @@ export  const styles = StyleSheet.create({
       borderRadius: 25,
     },
     food: {
-      fontSize: 20,
+      fontSize: 15,
     },
     title: {
-      fontSize: 25,
+      fontSize: 15,
       fontStyle: 'italic',
       fontWeight: 'bold',
     },
@@ -92,6 +92,9 @@ export  const styles = StyleSheet.create({
     buttonConsume: {
       backgroundColor: 'green',
     },  
+    buttonCancel: {
+      backgroundColor: 'red',
+    },
     textStyle: {
       color: 'white',
       fontWeight: 'bold',

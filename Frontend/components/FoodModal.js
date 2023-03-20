@@ -6,8 +6,8 @@ import { getUsername } from './getUsername';
 import { styles } from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number=''
-,date=new Date(),foodList=[],setName,setNumber,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
+export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
+,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
   const [isLoading,setIsLoading] = useState(false);
   return (
         <Modal
@@ -25,24 +25,26 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>
             <Text style={styles.title}>number</Text> 
             <TextInput style={styles.input} onChangeText={setNumber} value={number} placeholder={number}/>
+            <Text style={styles.title}>unit</Text> 
+            <TextInput style={styles.input} onChangeText={setUnit} value={unit} placeholder={unit}/>
             <Text style={styles.title}>emoji</Text>
             <TextInput style={styles.input} onChangeText={setEmoji} value={emoji} placeholder={emoji}/>
             {!isRecipe && <Text style={styles.title}>date</Text>}
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> {addFood(name,number,emoji,date,setFoodList)}}>
+                onPress={()=> {addFood(name,number,unit,emoji,date,setFoodList)}}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> isRecipe ? addRecipeFood(name,number,emoji,foodList,setFoodList) 
-              : addFood(name,number,emoji,date,setFoodList)}>
+              onPress={()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList) 
+              : addFood(name,number,unit,emoji,date,setFoodList)}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
             {deleteFlag && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> {removeFood(name,number,emoji,date,setFoodList)}}>
+              onPress={()=> {removeFood(name,number,unit,emoji,date,setFoodList)}}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity
@@ -56,15 +58,16 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         </Modal>
   );
 }
-function addRecipeFood(name,number,emoji,foodList,setFoodList){
-  const newList = foodList.concat({ name:name,quantity:number,emoji:emoji });
+function addRecipeFood(name,number,unit,emoji,foodList,setFoodList){
+  const newList = foodList.concat({ name:name, quantity:number,unit:unit, emoji:emoji });
   setFoodList(newList);
 }
-async function addFood(name,number,emoji,date,setFoodList){
+async function addFood(name,number,unit,emoji,date,setFoodList){
   const message={
     "name": name,
     "emoji": emoji,
     "quantity": number,
+    "unit": unit,
     "date": date,
   }
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
@@ -79,11 +82,12 @@ async function addFood(name,number,emoji,date,setFoodList){
   .then(response => response.json())
   .then(response=>setFoodList(response))
 }
-async function removeFood(name,number,emoji,date,setFoodList){
+async function removeFood(name,number,unit,emoji,date,setFoodList){
   const message={
     "name": name,
     "emoji": emoji,
     "quantity": number,
+    "unit": unit,
     "date": date,
   }
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{

@@ -4,6 +4,7 @@ import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import Fridge from './Fridge';
+import ConfirmModal from './confirm';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
@@ -11,6 +12,8 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
     const [status,setStatus] = useState(0);
     const [isEditingName,setIsEditingName] = useState(false);
     const [isEditingMethod,setIsEditingMethod] = useState(false);
+    const [confirmModalVisible,setConfirmModalVisible] = useState(false);
+    const [isConfirmed,setIsConfirmed] = useState(false);
     function restore(){
       setModalVisible(!modalVisible);
       setIsEditingName(false);
@@ -18,6 +21,8 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
       setName('');
       setMethod('');
       setIngredient([]);
+      setConfirmModalVisible(false);
+      setIsConfirmed(false);
     }
   return (
       <Modal
@@ -41,6 +46,9 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
 
         <Fridge setStatus={setStatus} foodList={ingredient} setFoodList={setIngredient} isRecipe={true}/>
+        
+        <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
+        setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed}/>
 
         {(!isEditingMethod && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingMethod(!isEditingMethod)}>
@@ -50,10 +58,15 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         <Text style={styles.title}>Method</Text>}
         {(isEditingMethod || isAdd) &&
         <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
-        {!isAdd && <TouchableOpacity
+        {(!isAdd && !isConfirmed) && <TouchableOpacity
+          style={[styles.button, styles.buttonConsume]}
+          onPress={() => setConfirmModalVisible(true)}>
+          <Text style={styles.textStyle}>Eat This!</Text>
+        </TouchableOpacity>}
+        {isConfirmed && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
           onPress={() => consumeRecipe(name,ingredient,method,setFoodList)}>
-          <Text style={styles.textStyle}>Eat This!</Text>
+          <Text style={styles.textStyle}>Confirm Eat This!</Text>
         </TouchableOpacity>}
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
