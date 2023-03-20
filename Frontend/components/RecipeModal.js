@@ -65,22 +65,22 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         </TouchableOpacity>}
         {isConfirmed && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
-          onPress={() => consumeRecipe(name,ingredient,method,setFoodList)}>
+          onPress={() => consumeRecipe(name,ingredient,method,setFoodList,restore)}>
           <Text style={styles.textStyle}>Confirm Eat This!</Text>
         </TouchableOpacity>}
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={() => addRecipe(name,ingredient,method,setRecipeList)}>
+          onPress={() => addRecipe(name,ingredient,method,setRecipeList,restore)}>
           <Text style={styles.textStyle}>Update Recipe</Text>
         </TouchableOpacity>}
         {isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={() => addRecipe(name,ingredient,method,setRecipeList)}>
+          onPress={() => addRecipe(name,ingredient,method,setRecipeList,restore)}>
           <Text style={styles.textStyle}>Add Recipe</Text>
         </TouchableOpacity>}
         <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={() => removeRecipe(name,ingredient,method,setRecipeList)}>
+          onPress={() => removeRecipe(name,ingredient,method,setRecipeList,restore)}>
           <Text style={styles.textStyle}>Remove Recipe</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -94,7 +94,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
       </Modal>
   );
 }
-async function addRecipe(name,ingredient,method,setRecipeList){
+async function addRecipe(name,ingredient,method,setRecipeList,restore){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -111,9 +111,9 @@ async function addRecipe(name,ingredient,method,setRecipeList){
     }
   })
   .then(response => response.json())
-  .then(response => setRecipeList(response))
+  .then(response => {setRecipeList(response);restore();})
 }
-async function removeRecipe(name,ingredient,method,setRecipeList){
+async function removeRecipe(name,ingredient,method,setRecipeList,restore){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -129,9 +129,9 @@ async function removeRecipe(name,ingredient,method,setRecipeList){
     }
   })
   .then(response => response.json())
-  .then(response => setRecipeList(response))
+  .then(response => {setRecipeList(response);restore();})
 }
-async function consumeRecipe(name,ingredient,method,setFoodList){
+async function consumeRecipe(name,ingredient,method,setFoodList,restore){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -147,5 +147,5 @@ async function consumeRecipe(name,ingredient,method,setFoodList){
     }
   })
   .then(response => response.json())
-  .then(response => setFoodList(response))
+  .then(response => {setFoodList(response);restore();})
 }

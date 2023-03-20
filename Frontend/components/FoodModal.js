@@ -9,6 +9,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
 ,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
   const [isLoading,setIsLoading] = useState(false);
+  function restore(){
+    setModalVisible(false);
+    setName('');
+    setNumber('');
+    setUnit('');
+    setEmoji('');
+    setDate(new Date());
+  }
   return (
         <Modal
           animationType="slide"
@@ -33,23 +41,24 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> {addFood(name,number,unit,emoji,date,setFoodList)}}>
+                onPress={()=> {addFood(name,number,unit,emoji,date,setFoodList,restore)}}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList) 
-              : addFood(name,number,unit,emoji,date,setFoodList)}>
+              onPress={()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
+              : addFood(name,number,unit,emoji,date,setFoodList,restore)}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
             {deleteFlag && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> {removeFood(name,number,unit,emoji,date,setFoodList)}}>
+              onPress={()=> isRecipe ? removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore)
+                : removeFood(name,number,unit,emoji,date,setFoodList,restore)}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
+              onPress={() => restore()}>
               <Text style={styles.textStyle}>Back</Text>
             </TouchableOpacity>
           </View>
@@ -58,11 +67,17 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         </Modal>
   );
 }
-function addRecipeFood(name,number,unit,emoji,foodList,setFoodList){
-  const newList = foodList.concat({ name:name, quantity:number,unit:unit, emoji:emoji });
+function addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
+  const newList = foodList.concat({ name:name, quantity:number, unit:unit, emoji:emoji });
   setFoodList(newList);
+  restore();
 }
-async function addFood(name,number,unit,emoji,date,setFoodList){
+function removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
+  const newList = foodList.filter((item) => item.name!=name);
+  setFoodList(newList);
+  restore();
+}
+async function addFood(name,number,unit,emoji,date,setFoodList,restore){
   const message={
     "name": name,
     "emoji": emoji,
@@ -80,9 +95,9 @@ async function addFood(name,number,unit,emoji,date,setFoodList){
     }
   })
   .then(response => response.json())
-  .then(response=>setFoodList(response))
+  .then(response=>{setFoodList(response);restore();})
 }
-async function removeFood(name,number,unit,emoji,date,setFoodList){
+async function removeFood(name,number,unit,emoji,date,setFoodList,restore){
   const message={
     "name": name,
     "emoji": emoji,
@@ -100,5 +115,5 @@ async function removeFood(name,number,unit,emoji,date,setFoodList){
     }
   })
   .then(response => response.json())
-  .then(response=>setFoodList(response))
+  .then(response=>{setFoodList(response);restore();})
 }
