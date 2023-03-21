@@ -1,4 +1,4 @@
-import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Alert, TextInput} from 'react-native';
+import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Alert, TextInput,KeyboardAvoidingView} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
@@ -51,7 +51,10 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
         setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed}/>
-
+        <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 0.5, alignItems: 'center', }}
+        >
         {(!isEditingMethod && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingMethod(!isEditingMethod)}>
             <Text style={styles.title}>{method}</Text> 
@@ -60,6 +63,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         <Text style={styles.title}>Method</Text>}
         {(isEditingMethod || isAdd) &&
         <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
+        </KeyboardAvoidingView>
         {(!isAdd && !isConfirmed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
           onPress={() => setConfirmModalVisible(true)}>
