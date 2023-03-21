@@ -14,6 +14,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
     const [isEditingMethod,setIsEditingMethod] = useState(false);
     const [confirmModalVisible,setConfirmModalVisible] = useState(false);
     const [isConfirmed,setIsConfirmed] = useState(false);
+    const [confirmedPressed,setConfirmedPressed] = useState(false)
     function restore(){
       setModalVisible(!modalVisible);
       setIsEditingName(false);
@@ -23,6 +24,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
       setIngredient([]);
       setConfirmModalVisible(false);
       setIsConfirmed(false);
+      setConfirmedPressed(false);
     }
   return (
       <Modal
@@ -63,11 +65,15 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
           onPress={() => setConfirmModalVisible(true)}>
           <Text style={styles.textStyle}>Eat This!</Text>
         </TouchableOpacity>}
-        {isConfirmed && <TouchableOpacity
+        {(isConfirmed && !confirmedPressed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
-          onPress={() => consumeRecipe(name,ingredient,method,setFoodList,restore)}>
+          onPress={() => consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed)}>
           <Text style={styles.textStyle}>Confirm Eat This!</Text>
         </TouchableOpacity>}
+
+        {confirmedPressed && 
+          <Text style={styles.confirm}>Confirmed Eat This!</Text>}
+
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
           onPress={() => addRecipe(name,ingredient,method,setRecipeList,restore)}>
@@ -137,7 +143,7 @@ async function removeRecipe(name,ingredient,method,setRecipeList,restore){
     Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
   });
 }
-async function consumeRecipe(name,ingredient,method,setFoodList,restore){
+async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -156,7 +162,7 @@ async function consumeRecipe(name,ingredient,method,setFoodList,restore){
     if (response.ok){
       response.json().then(response=>{
         setFoodList(response);
-        restore();
+        setConfirmedPressed(true);
       })
     }
     else{
