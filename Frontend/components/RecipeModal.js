@@ -35,8 +35,8 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         Alert.alert('Modal has been closed.');
         setModalVisible(!modalVisible);
       }}>
+      <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
       <View style={styles.centeredView}>
-        <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.modalView}>
         {(!isEditingName && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingName(!isEditingName)}>
@@ -67,7 +67,8 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         </TouchableOpacity>}
         {(isConfirmed && !confirmedPressed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
-          onPress={() => consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed)}>
+          onPress={async () => {await consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed);
+            await addRecipe(name,ingredient,method,setRecipeList);}}>
           <Text style={styles.textStyle}>Confirm Eat This!</Text>
         </TouchableOpacity>}
 
@@ -76,17 +77,17 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
 
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={() => addRecipe(name,ingredient,method,setRecipeList,restore)}>
+          onPress={async () => {await addRecipe(name,ingredient,method,setRecipeList);restore();}}>
           <Text style={styles.textStyle}>Update Recipe</Text>
         </TouchableOpacity>}
         {isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={() => addRecipe(name,ingredient,method,setRecipeList,restore)}>
+          onPress={async () => {await addRecipe(name,ingredient,method,setRecipeList);restore();}}>
           <Text style={styles.textStyle}>Add Recipe</Text>
         </TouchableOpacity>}
         <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={() => removeRecipe(name,ingredient,method,setRecipeList,restore)}>
+          onPress={async () => {await removeRecipe(name,ingredient,method,setRecipeList);restore()}}>
           <Text style={styles.textStyle}>Remove Recipe</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -95,12 +96,12 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
           <Text style={styles.textStyle}>Back</Text>
         </TouchableOpacity>
         </View>
-        </TouchableWithoutFeedback>
       </View>
+      </TouchableWithoutFeedback>
       </Modal>
   );
 }
-async function addRecipe(name,ingredient,method,setRecipeList,restore){
+async function addRecipe(name,ingredient,method,setRecipeList){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -117,12 +118,12 @@ async function addRecipe(name,ingredient,method,setRecipeList,restore){
     }
   })
   .then(response => response.json())
-  .then(response => {setRecipeList(response);restore();})
+  .then(response => {setRecipeList(response);})
   .catch(error => {
     Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
   });
 }
-async function removeRecipe(name,ingredient,method,setRecipeList,restore){
+async function removeRecipe(name,ingredient,method,setRecipeList){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -138,7 +139,7 @@ async function removeRecipe(name,ingredient,method,setRecipeList,restore){
     }
   })
   .then(response => response.json())
-  .then(response => {setRecipeList(response);restore();})
+  .then(response => {setRecipeList(response);})
   .catch(error => {
     Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
   });
