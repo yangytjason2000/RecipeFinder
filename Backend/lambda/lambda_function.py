@@ -8,6 +8,10 @@ METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
 ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
 
+class consumeError(Exception):
+    def __init__(self, message):
+        self.message = message
+
 def lambda_handler(event, context):
     method = event['httpMethod']
     if method not in METHODS:
@@ -79,13 +83,11 @@ def consume_item(table, payload,username):
     for ingredient in ingredients:
         response = table.get_item(Key={'username': username,'name': ingredient['name']})
         if 'Item' not in response:
-            print('no ingredient')
-            continue
+            return serialize_invalid_response('No such ingredient')
         if int(response['Item']['quantity'])>=int(ingredient['quantity']):
             response['Item']['quantity']=str(int(response['Item']['quantity'])-int(ingredient['quantity']))
         else:
-            response['Item']['quantity'] = '0'
-            print('no enough ingredient')
+            return serialize_invalid_response('Not enough ingredient')
         table.put_item(Item=response['Item'])
     return get_item(table,username)
 

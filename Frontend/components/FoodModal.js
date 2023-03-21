@@ -1,4 +1,4 @@
-import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, ImageBackground, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
@@ -96,6 +96,9 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
   })
   .then(response => response.json())
   .then(response=>{setFoodList(response);restore();})
+  .catch(error => {
+    Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
+  });
 }
 async function removeFood(name,number,unit,emoji,date,setFoodList,restore){
   const message={
@@ -116,4 +119,7 @@ async function removeFood(name,number,unit,emoji,date,setFoodList,restore){
   })
   .then(response => response.json())
   .then(response=>{setFoodList(response);restore();})
+  .catch(error => {
+    Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
+  });
 }

@@ -37,6 +37,6 @@ async function signOut(setSignedIn) {
       await Auth.signOut({ global: true })
       .then(response=>setSignedIn(false));
   } catch (error) {
-      console.log('error signing out: ', error);
+      Alert.alert('Sign out error',error.message, [{ text: 'Ok' }]);
   }
 }

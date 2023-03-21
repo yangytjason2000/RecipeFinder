@@ -1,6 +1,5 @@
-import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
+import { Modal, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import { getRecipe } from './getRecipe';
@@ -64,8 +63,14 @@ async function getRecommendRecipe(setRecipeList,setIsRecommend){
   })
   .then(response => response.json())
   .then(response => {setRecipeList(response);setIsRecommend(true)})
+  .catch(error => {
+    Alert.alert('Error',error.message, [{ text: 'Ok' }]);
+  });
 }
 async function getAllRecipe(setRecipeList,setIsRecommend){
   await getRecipe(setRecipeList)
   .then(response => setIsRecommend(false))
+  .catch(error => {
+    Alert.alert('Error',error.message, [{ text: 'Ok' }]);
+  });
 }

@@ -68,13 +68,13 @@ async function confirm(username,confirmation,setSignedIn) {
     console.log(data);
     setSignedIn(true);
   })
-  .catch(err => {
-    console.log(err);
+  .catch(error => {
+    Alert.alert('Confirmation error',error.message, [{ text: 'Ok' }]);
   });
 }
 async function signUp(username,password,email,setEmailSent) {
   try {
-      const { user } = await Auth.signUp({
+      await Auth.signUp({
           username,
           password,
           attributes:{
@@ -83,10 +83,10 @@ async function signUp(username,password,email,setEmailSent) {
           autoSignIn: {
               enabled: true,
           }
-      });
-      setEmailSent(true);
+      })
+      .then(response=>setEmailSent(true));
   } catch (error) {
-      console.log(error);
+    Alert.alert('Sign up error',error.message, [{ text: 'Ok' }]);
   }
 }
 async function signIn(username,password,setSignedIn,setFoodList,setRecipeList,setModalVisible) {
@@ -97,6 +97,6 @@ async function signIn(username,password,setSignedIn,setFoodList,setRecipeList,se
       })
       .then(response=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);setModalVisible(false)})
   } catch (error) {
-      console.log(error)
+    Alert.alert('Login error',error.message, [{ text: 'Ok' }]);
   }
 }

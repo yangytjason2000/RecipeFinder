@@ -1,4 +1,4 @@
-import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Image, TextInput} from 'react-native';
+import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Alert, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
@@ -112,6 +112,9 @@ async function addRecipe(name,ingredient,method,setRecipeList,restore){
   })
   .then(response => response.json())
   .then(response => {setRecipeList(response);restore();})
+  .catch(error => {
+    Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
+  });
 }
 async function removeRecipe(name,ingredient,method,setRecipeList,restore){
   const message={
@@ -130,6 +133,9 @@ async function removeRecipe(name,ingredient,method,setRecipeList,restore){
   })
   .then(response => response.json())
   .then(response => {setRecipeList(response);restore();})
+  .catch(error => {
+    Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
+  });
 }
 async function consumeRecipe(name,ingredient,method,setFoodList,restore){
   const message={
@@ -146,6 +152,17 @@ async function consumeRecipe(name,ingredient,method,setFoodList,restore){
         .getJwtToken()}`
     }
   })
-  .then(response => response.json())
-  .then(response => {setFoodList(response);restore();})
+  .then(response => {
+    if (response.ok){
+      response.json().then(response=>{
+        setFoodList(response);
+        restore();
+      })
+    }
+    else{
+      response.json().then(error=>{
+        Alert.alert('Error',error.message,[{text: 'OK'}]);
+      })
+    }
+  })
 }
