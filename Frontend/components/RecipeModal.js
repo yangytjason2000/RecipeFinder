@@ -176,4 +176,7 @@ async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPres
       })
     }
   })
+  .catch(error => {
+    Alert.alert('Error',error.message, [{ text: 'Ok' }]);
+  });
 }

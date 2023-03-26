@@ -84,10 +84,13 @@ def consume_item(table, payload,username):
         response = table.get_item(Key={'username': username,'name': ingredient['name']})
         if 'Item' not in response:
             return serialize_invalid_response('No such ingredient: '+ingredient['name'])
-        if int(response['Item']['quantity'])<int(ingredient['quantity']):
+        if float(response['Item']['quantity'])<float(ingredient['quantity']):
             return serialize_invalid_response('Not enough ingredient: '+ingredient['name'])
     for ingredient in ingredients:
-        response['Item']['quantity']=str(int(response['Item']['quantity'])-int(ingredient['quantity']))
+        if (float(response['Item']['quantity'])-float(ingredient['quantity'])).is_integer():
+            response['Item']['quantity']=str(int(float(response['Item']['quantity'])-float(ingredient['quantity'])))
+        else:
+            response['Item']['quantity']=str(float(response['Item']['quantity'])-float(ingredient['quantity']))
         table.put_item(Item=response['Item'])
     return get_item(table,username)
 
