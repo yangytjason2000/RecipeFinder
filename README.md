@@ -8,7 +8,7 @@ RecipeFinder is a mobile app developed using React Native and AWS Lambda to help
 # Getting Started
 1. Clone the repo
 2. Download **Expo Go** on your mobile device
-3. Navigate to the **Frontend** folder in your terminal and run **npx expo start**
+3. Navigate to the **Frontend** folder in your terminal and run `npx expo start`
 4. Scan the QR code using your Expo Go
 # Reminder
 If you want to deploy the backend to your own AWS account, you need to add a layer with PyJWT downloaded as zip file for the Lambda Function
