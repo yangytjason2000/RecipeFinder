@@ -7,7 +7,7 @@ RecipeFinder is a mobile app developed using React Native and AWS Lambda to help
 * All users to mark what recipe is consumed and update the ingredienst in the fridge accordingly
 # Getting Started
 1. Clone the repo
-2. Download **Expo Go* on your mobile device
+2. Download **Expo Go** on your mobile device
 3. Navigate to the **Frontend** folder in your terminal and run **npx expo start**
 4. Scan the QR code using you Expo Go
 # Reminder
