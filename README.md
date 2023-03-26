@@ -1,5 +1,5 @@
 # RecipeFinder
-RecipeFinder is a mobile app developed using React Native and AWS Lambda to help users keep track of inredients in their fridge as well as their recipes. 
+RecipeFinder is a mobile app developed using React Native and AWS Lambda to help users keep track of ingredients in their fridge as well as their recipes. 
 # Features
 * Full user sign in authorization functionality allowing users to keep track of their own data.
 * Allow users to keep track of what ingredients are in their fridge, and their homemade recipes.
