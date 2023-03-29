@@ -104,7 +104,10 @@ def post_item(table, payload, username):
         match = re.fullmatch(ISO8601, date)
         if match is None:
             return serialize_invalid_response(f'Invalid date: {date}')
-
+    if 'quantity' in item:
+        quantity = item['quantity']
+        if not quantity.isdigit():
+            return serialize_invalid_response('Invalid quantity')
     item['username'] = username
     table.put_item(Item=item)
     return get_item(table,username)

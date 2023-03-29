@@ -94,8 +94,19 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
         .getJwtToken()}`
     }
   })
-  .then(response => response.json())
-  .then(response=>{setFoodList(response);restore();})
+  .then(response => {
+    if (response.ok){
+      response.json().then(response=>{
+        setFoodList(response);
+        restore();
+      })
+    }
+    else{
+      response.json().then(error=>{
+        Alert.alert('Error',error.message,[{text: 'OK'}]);
+      })
+    }
+  })
   .catch(error => {
     Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
   });
@@ -117,8 +128,19 @@ async function removeFood(name,number,unit,emoji,date,setFoodList,restore){
         .getJwtToken()}`
     }
   })
-  .then(response => response.json())
-  .then(response=>{setFoodList(response);restore();})
+  .then(response => {
+    if (response.ok){
+      response.json().then(response=>{
+        setFoodList(response);
+        restore();
+      })
+    }
+    else{
+      response.json().then(error=>{
+        Alert.alert('Error',error.message,[{text: 'OK'}]);
+      })
+    }
+  })
   .catch(error => {
     Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
   });
