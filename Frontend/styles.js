@@ -117,4 +117,17 @@ export  const styles = StyleSheet.create({
       width: 150,
       fontSize: 20,
     },
+    method: {
+      height: 100,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+      width: 150,
+      fontSize: 15,
+    },
+    nameTitle: {
+      fontSize: 25,
+      fontStyle: 'italic',
+      fontWeight: 'bold',
+    }
   });

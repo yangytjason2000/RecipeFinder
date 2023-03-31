@@ -5,7 +5,7 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import Fridge from './Fridge';
 import ConfirmModal from './confirm';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { getRecipe } from './getRecipe';
 
 export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
     setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
@@ -53,7 +53,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed}/>
         <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 0.5, alignItems: 'center', }}
+        style={{ flex: 1, alignItems: 'center', }}
         >
         {(!isEditingMethod && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingMethod(!isEditingMethod)}>
@@ -62,8 +62,9 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         {(isAdd) &&
         <Text style={styles.title}>Method</Text>}
         {(isEditingMethod || isAdd) &&
-        <TextInput style={styles.input} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
+        <TextInput style={styles.method} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
         </KeyboardAvoidingView>
+
         {(!isAdd && !isConfirmed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
           onPress={() => setConfirmModalVisible(true)}>
@@ -121,8 +122,19 @@ async function addRecipe(name,ingredient,method,setRecipeList){
         .getJwtToken()}`
     }
   })
-  .then(response => response.json())
-  .then(response => {setRecipeList(response);})
+  .then(response => {
+    if (response.ok){
+      response.json().then(response=>{
+        setRecipeList(response);
+      })
+    }
+    else{
+      response.json().then(error=>{
+        Alert.alert('Error',error.message,[{text: 'OK'}]);
+
+      })
+    }
+  })
   .catch(error => {
     Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
   });
@@ -142,10 +154,20 @@ async function removeRecipe(name,ingredient,method,setRecipeList){
         .getJwtToken()}`
     }
   })
-  .then(response => response.json())
-  .then(response => {setRecipeList(response);})
+  .then(response => {
+    if (response.ok){
+      response.json().then(response=>{
+        setRecipeList(response);;
+      })
+    }
+    else{
+      response.json().then(error=>{
+        Alert.alert('Error',error.message,[{text: 'OK'}]);
+      })
+    }
+  })
   .catch(error => {
-    Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
+    Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
   });
 }
 async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed){

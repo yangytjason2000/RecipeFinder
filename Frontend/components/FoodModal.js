@@ -29,8 +29,9 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.title}>name</Text>
-            <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>
+            {!deleteFlag && <Text style={styles.title}>name</Text>}
+            {!deleteFlag && <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
+            {deleteFlag && <Text style={styles.nameTitle}>{name+'\n'}</Text>}
             <Text style={styles.title}>number</Text> 
             <TextInput style={styles.input} onChangeText={setNumber} value={number} placeholder={number}/>
             <Text style={styles.title}>unit</Text> 
@@ -41,7 +42,8 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> {addFood(name,number,unit,emoji,date,setFoodList,restore)}}>
+                onPress={()=> isRecipe ? saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
+                  : addFood(name,number,unit,emoji,date,setFoodList,restore)}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
@@ -71,6 +73,19 @@ function addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
   const newList = foodList.concat({ name:name, quantity:number, unit:unit, emoji:emoji });
   setFoodList(newList);
   restore();
+}
+function saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
+  for (var i=0;i<foodList.length;i++){
+    if (foodList[i]['name']==name) {
+      const newList = foodList.map(item => ({ ...item }));
+      newList[i]['quantity']=number;
+      newList[i]['unit']=unit;
+      newList[i]['emoji']=emoji;
+      setFoodList(newList);
+      restore();
+      return;
+    }
+  }
 }
 function removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
   const newList = foodList.filter((item) => item.name!=name);

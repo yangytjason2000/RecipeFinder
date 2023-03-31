@@ -94,6 +94,13 @@ def consume_item(table, payload,username):
         table.put_item(Item=response['Item'])
     return get_item(table,username)
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+    
 def post_item(table, payload, username):
     valid, item = validate_payload(payload)
     if not valid:
@@ -106,8 +113,13 @@ def post_item(table, payload, username):
             return serialize_invalid_response(f'Invalid date: {date}')
     if 'quantity' in item:
         quantity = item['quantity']
-        if not quantity.isdigit():
+        if not is_number(quantity):
             return serialize_invalid_response('Invalid quantity')
+    if 'ingredient' in item:
+        ingredients = item['ingredient']
+        for ingredient in ingredients:
+            if not is_number(ingredient['quantity']):
+                return serialize_invalid_response('Invalid quantity')
     item['username'] = username
     table.put_item(Item=item)
     return get_item(table,username)
