@@ -38,7 +38,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             <TextInput style={styles.input} onChangeText={setUnit} value={unit} placeholder={unit}/>
             <Text style={styles.title}>emoji</Text>
             <TextInput style={styles.input} onChangeText={setEmoji} value={emoji} placeholder={emoji}/>
-            {!isRecipe && <Text style={styles.title}>date</Text>}
+            {!isRecipe && <Text style={styles.title}>expiration date</Text>}
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
