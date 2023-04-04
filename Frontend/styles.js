@@ -1,14 +1,7 @@
 import { StyleSheet } from "react-native";
-export const styles = StyleSheet.create({
+export  const styles = StyleSheet.create({
     container: {
       flex: 1,
-    },
-    buttonLayout: {
-      flex: 1,
-      backgroundColor: 'grey',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      flexDirection: 'row',
     },
     fridgeContainer: {
       flex: 1,
@@ -84,14 +77,6 @@ export const styles = StyleSheet.create({
       elevation: 5,
     },
     button: {
-      width: '30%',
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-      marginBottom: 10,
-      marginTop: 10,
-    },
-    signInButton: {
       borderRadius: 20,
       padding: 10,
       elevation: 2,
