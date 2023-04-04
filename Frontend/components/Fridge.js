@@ -37,12 +37,14 @@ export default function Fridge({setStatus,foodList,setFoodList,isRecipe=false}) 
       name={selectedName} emoji={selectedEmoji} number={selectedNumber} unit={selectedUnit} date={selectedDate} foodList={foodList}
       setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setUnit={setSelectedUnit}
       setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={isRecipe}/>
+      <View style={styles.buttonLayout}>
       <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.button,styles.buttonClose]}>
         <Text style={styles.textStyle}>Add Food</Text>
       </TouchableOpacity>
       {!isRecipe && <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
         <Text style={styles.textStyle}>Back</Text>
       </TouchableOpacity>}
+      </View>
     </View>
   );
 }

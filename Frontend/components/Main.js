@@ -22,10 +22,10 @@ export default function Main({setStatus,setFoodList,setRecipeList,signedIn,setSi
         {!signedIn && <LoginModal modalVisible={signupModalVisible} 
         setModalVisible={setSignupModalVisible} setSignupModalVisible={setSignupModalVisible} 
         setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn} loginFlag={false}/>}
-        {!signedIn && <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
+        {!signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
           <Text style={styles.textStyle}>Sign in</Text>
         </TouchableOpacity>}
-        {signedIn && <TouchableOpacity style={[styles.button,styles.buttonClose]} onPress={()=>signOut(setSignedIn)}>
+        {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>signOut(setSignedIn)}>
           <Text style={styles.textStyle}>Sign out</Text>
         </TouchableOpacity>}
       </ImageBackground>
