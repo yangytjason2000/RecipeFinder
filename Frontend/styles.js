@@ -3,6 +3,13 @@ export  const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
+    buttonContainer: {
+      flex: 1,
+      backgroundColor: 'grey',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+      flexDirection: 'row',
+    },
     fridgeContainer: {
       flex: 1,
       backgroundColor: 'grey',
@@ -76,7 +83,15 @@ export  const styles = StyleSheet.create({
       shadowRadius: 5,
       elevation: 5,
     },
+    signInButton: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+      marginBottom: 10,
+      marginTop: 10,
+    },
     button: {
+      width: '30%',
       borderRadius: 20,
       padding: 10,
       elevation: 2,

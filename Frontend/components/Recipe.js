@@ -35,20 +35,22 @@ export default function Recipe({setStatus,recipeList,setRecipeList,isRecommend,s
       setName={setSelectedName} setIngredient={setSelectedIngredient} setMethod={setSelectedMethod} 
       setRecipeList={setRecipeList} setFoodList={setFoodList}>
       </RecipeModal>
-      <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={[styles.button,styles.buttonClose]}>
-      <Text style={styles.textStyle}>Add</Text>
-      </TouchableOpacity>
-      {!isRecommend && <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList,setIsRecommend)} 
-      style={[styles.button,styles.buttonClose]}>
-      <Text style={styles.textStyle}>Recommend</Text>
-      </TouchableOpacity>}
-      {isRecommend && <TouchableOpacity  onPress={()=>getAllRecipe(setRecipeList,setIsRecommend)} 
-      style={[styles.button,styles.buttonClose]}>
-      <Text style={styles.textStyle}>Get All Recipes</Text>
-      </TouchableOpacity>}
-      <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
-      <Text style={styles.textStyle}>Back</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={[styles.button,styles.buttonClose]}>
+        <Text style={styles.textStyle}>Add</Text>
+        </TouchableOpacity>
+        {!isRecommend && <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList,setIsRecommend)} 
+        style={[styles.button,styles.buttonClose]}>
+        <Text style={styles.textStyle}>Recommend</Text>
+        </TouchableOpacity>}
+        {isRecommend && <TouchableOpacity  onPress={()=>getAllRecipe(setRecipeList,setIsRecommend)} 
+        style={[styles.button,styles.buttonClose]}>
+        <Text style={styles.textStyle}>Get All Recipes</Text>
+        </TouchableOpacity>}
+        <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
+        <Text style={styles.textStyle}>Back</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
