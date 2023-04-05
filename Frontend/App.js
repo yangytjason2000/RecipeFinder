@@ -38,24 +38,21 @@ export default function App() {
   // const [isRecommend,setIsRecommend] = useGlobalState("isRecommend");
 
 
-  // const [status,setStatus]=useState(0);
-  // const [foodList, setFoodList] = useState([]);
-  // const [recipeList,setRecipeList] = useState([]);
-  // const [signedIn,setSignedIn] = useState(false);
-  // const [isRecommend,setIsRecommend] = useState(false);
+  const [foodList, setFoodList] = store.useState("foodList");
+  const [recipeList,setRecipeList] = store.useState("recipeList");
+  const [signedIn,setSignedIn] = store.useState("signedIn");
 
-
-  // useEffect(()=>{
-  //   const confirmSignedIn = async() => {
-  //     try {
-  //       await Auth.currentAuthenticatedUser()
-  //       .then(()=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
-  //     } catch {
-  //       setSignedIn(false);
-  //     }
-  //   }
-  //   confirmSignedIn();
-  //   },[])
+  useEffect(()=>{
+    const confirmSignedIn = async() => {
+      try {
+        await Auth.currentAuthenticatedUser()
+        .then(()=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
+      } catch {
+        setSignedIn(false);
+      }
+    }
+    confirmSignedIn();
+    },[])
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="RecipeFinder">
@@ -65,15 +62,4 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-  // if (status==0){
-  //   return (<Main setStatus={setStatus} setFoodList={setFoodList} setRecipeList={setRecipeList}
-  //     signedIn={signedIn} setSignedIn={setSignedIn}/>);
-  // }
-  // else if (status==1){
-  //   return (<Fridge setStatus={setStatus} foodList={foodList} setFoodList={setFoodList}/>);
-  // }
-  // else if (status==2){
-  //   return (<Recipe setStatus={setStatus} recipeList={recipeList} setRecipeList={setRecipeList}
-  //   isRecommend={isRecommend} setIsRecommend={setIsRecommend} setFoodList={setFoodList}/>);
-  // }
 }
