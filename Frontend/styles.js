@@ -98,6 +98,13 @@ export  const styles = StyleSheet.create({
       marginBottom: 10,
       marginTop: 10,
     },
+    buttonAdd: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+      marginBottom: 10,
+      marginTop: 10,
+    },
     buttonOpen: {
       backgroundColor: '#F194FF',
     },

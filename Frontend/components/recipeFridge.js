@@ -38,11 +38,9 @@ export default function RecipeFridge({foodList,setFoodList}) {
       name={selectedName} emoji={selectedEmoji} number={selectedNumber} unit={selectedUnit} date={selectedDate} foodList={foodList}
       setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setUnit={setSelectedUnit}
       setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={true}/>
-      <View style={styles.buttonContainer}>
-      <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.button,styles.buttonClose]}>
+      <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.buttonAdd,styles.buttonClose]}>
         <Text style={styles.textStyle}>Add Food</Text>
       </TouchableOpacity>
-      </View>
     </View>
   );
 }

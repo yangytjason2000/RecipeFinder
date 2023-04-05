@@ -58,8 +58,8 @@ export default function App() {
   //   },[])
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen name="Main" component={Main} />
+      <Stack.Navigator initialRouteName="RecipeFinder">
+        <Stack.Screen name="RecipeFinder" component={Main} />
         <Stack.Screen name="Fridge" component={Fridge} />
         <Stack.Screen name="Recipe" component={Recipe} />
       </Stack.Navigator>
