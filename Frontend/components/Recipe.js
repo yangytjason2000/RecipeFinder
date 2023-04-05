@@ -4,10 +4,16 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import { getRecipe } from './getRecipe';
 import RecipeModal from './RecipeModal';
+import store from './store';
 import Item from './RecipeItem';
-export default function Recipe({setStatus,recipeList,setRecipeList,isRecommend,setIsRecommend,setFoodList}) {
+export default function Recipe({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
+
+  const [foodList, setFoodList] = store.useState("foodList");
+  const [recipeList,setRecipeList] = store.useState("recipeList");
+  const [isRecommend,setIsRecommend] = store.useState("isRecommend");
+
   //name,emoji,number
   const [name,setName] = useState('');
   const [ingredient,setIngredient] = useState([]);
@@ -47,9 +53,6 @@ export default function Recipe({setStatus,recipeList,setRecipeList,isRecommend,s
         style={[styles.button,styles.buttonClose]}>
         <Text style={styles.textStyle}>Get All Recipes</Text>
         </TouchableOpacity>}
-        <TouchableOpacity onPress={()=>setStatus(0)} style={[styles.button,styles.buttonClose]}>
-        <Text style={styles.textStyle}>Back</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

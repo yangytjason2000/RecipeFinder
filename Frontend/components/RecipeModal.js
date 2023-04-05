@@ -3,7 +3,7 @@ import { useState,useRef,useEffect } from 'react';
 import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
-import Fridge from './Fridge';
+import RecipeFridge from './recipeFridge';
 import ConfirmModal from './confirm';
 import { getRecipe } from './getRecipe';
 
@@ -47,7 +47,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         {(isEditingName || isAdd) &&
         <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
 
-        <Fridge setStatus={setStatus} foodList={ingredient} setFoodList={setIngredient} isRecipe={true}/>
+        <RecipeFridge foodList={ingredient} setFoodList={setIngredient}/>
         
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
         setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed}/>
