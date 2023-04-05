@@ -11,13 +11,16 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-community/datetimepicker": "6.5.2",
-    "@react-native-community/netinfo": "^9.3.7",
+    "@react-native-community/netinfo": "9.3.5",
+    "@react-navigation/native": "^6.1.6",
+    "@react-navigation/native-stack": "^6.9.12",
     "amazon-cognito-identity-js": "^6.1.2",
     "aws-amplify": "^5.0.16",
     "expo": "^47.0.13",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-native": "0.70.5",
+    "state-pool": "^0.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

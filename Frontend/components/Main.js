@@ -4,16 +4,22 @@ import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import LoginModal from './LoginModal';
-export default function Main({setStatus,setFoodList,setRecipeList,signedIn,setSignedIn}) {
+import { useGlobalState } from 'state-pool';
+import store from './store';
+export default function Main({navigation}) {
   const [loginModalVisible,setLoginModalVisible] = useState(false);
   const [signupModalVisible,setSignupModalVisible] = useState(false);
+  const [status,setStatus]=store.useState("status");
+  const [foodList, setFoodList] = store.useState("foodList");
+  const [recipeList,setRecipeList] = store.useState("recipeList");
+  const [signedIn,setSignedIn] = store.useState("signedIn");
   return (
     <FadeInView style={styles.container}>
       <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
-        <TouchableOpacity onPress={()=>setStatus(1)} style={styles.fridge}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Fridge')} style={styles.fridge}>
           <Image source={require( '../assets/fridge.png')}></Image>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>setStatus(2)} style={styles.recipe}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Recipe')} style={styles.recipe}>
           <Image source={require('../assets/recipe.png')}></Image>
         </TouchableOpacity> 
         {!signedIn && <LoginModal modalVisible={loginModalVisible} 
