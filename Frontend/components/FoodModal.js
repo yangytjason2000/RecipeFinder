@@ -5,6 +5,7 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { getUsername } from './getUsername';
 import { styles } from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { updateErrorCheck } from './FridgeErrorCheck';
 
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
 ,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
@@ -42,20 +43,20 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> isRecipe ? saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
-                  : addFood(name,number,unit,emoji,date,setFoodList,restore)}>
+                onPress={async ()=> isRecipe ? saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
+                  : await updateErrorCheck(name,number,unit,emoji,date,setFoodList,restore,addFood)}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
-              : addFood(name,number,unit,emoji,date,setFoodList,restore)}>
+              onPress={async ()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
+              : await updateErrorCheck(name,number,unit,emoji,date,setFoodList,restore,addFood)}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
             {deleteFlag && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> isRecipe ? removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore)
-                : removeFood(name,number,unit,emoji,date,setFoodList,restore)}>
+              onPress={async ()=> isRecipe ? removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore)
+                : await updateErrorCheck(name,number,unit,emoji,date,setFoodList,restore,removeFood)}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity

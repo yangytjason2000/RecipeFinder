@@ -1,9 +1,9 @@
 import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { FadeInView } from './FadeInView';
 import { styles } from '../styles';
 import FoodModal from './FoodModal';
 import Item from './FoodItem';
+import { AntDesign } from '@expo/vector-icons';
 export default function RecipeFridge({foodList,setFoodList}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [foodModalVisible,setFoodModalVisible] = useState(false);
@@ -21,7 +21,7 @@ export default function RecipeFridge({foodList,setFoodList}) {
   const [selectedUnit,setSelectedUnit] = useState('');
   const [selectedDate,setSelectedDate] = useState(new Date());
   return (
-    <View style={styles.recipeContainer}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.container}>
       <FlatList
         data={foodList}
@@ -38,8 +38,9 @@ export default function RecipeFridge({foodList,setFoodList}) {
       name={selectedName} emoji={selectedEmoji} number={selectedNumber} unit={selectedUnit} date={selectedDate} foodList={foodList}
       setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setUnit={setSelectedUnit}
       setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={true}/>
-      <TouchableOpacity  onPress={()=>setModalVisible(true)} style={[styles.buttonAdd,styles.buttonClose]}>
-        <Text style={styles.textStyle}>Add Food</Text>
+      <TouchableOpacity  onPress={()=>setModalVisible(true)} style={styles.iosbutton}>
+        <AntDesign name="pluscircleo" size={24} color="#007AFF" />
+        <Text style={styles.addTextStyle}> Ingredients</Text>
       </TouchableOpacity>
     </View>
   );

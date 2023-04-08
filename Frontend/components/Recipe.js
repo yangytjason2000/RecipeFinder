@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
+import { Modal, Animated, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity,} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
@@ -6,6 +6,10 @@ import { getRecipe } from './getRecipe';
 import RecipeModal from './RecipeModal';
 import store from './store';
 import Item from './RecipeItem';
+
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Swipeable } from 'react-native-gesture-handler';
 export default function Recipe({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
@@ -22,15 +26,66 @@ export default function Recipe({navigation}) {
   const [selectedName,setSelectedName] = useState('');
   const [selectedIngredient,setSelectedIngredient] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState('');
+
+
+  const [swiping,setSwiping] = useState({});
+
+  const swipeableRefs = useRef({});
+
+  useEffect(() => {
+    for (const key in swiping) {
+      if (swiping[key] === false) {
+        swipeableRefs.current[key].close();
+      }
+    }
+  }, [swiping]);
+
+
+  const handleDelete = async (item) => {
+    await removeRecipe(item.name,item.ingredient,item.method, setRecipeList);
+    setSwiping({...swiping, [item.name]: false});
+  }
+
   return (
     <View style={styles.fridgeContainer}>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
       <FlatList
         data={recipeList}
-        renderItem={({item}) => <Item recipe={item} setName={setSelectedName} setIngredient={setSelectedIngredient}
-        setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible}/>}
+        renderItem={({item}) => 
+        <Swipeable 
+          ref={ref => swipeableRefs.current[item.name] = ref}
+          renderRightActions={(progress,dragX) => 
+          <TouchableOpacity
+          onPress={() => handleDelete(item)}
+          >
+            <Animated.View
+              style={[
+                styles.deleteButton,
+                {
+                transform: [
+                {
+                  translateX: dragX.interpolate({
+                  inputRange: [-70, 0],
+                  outputRange: [0, 70],
+                  extrapolate: 'clamp',
+                  }),
+                },
+              ],
+              },
+            ]}
+          >
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </Animated.View>
+       </TouchableOpacity>
+       
+        }
+        onSwipeableWillOpen={() => setSwiping({...swiping, [item.name]: true})}
+        onSwipeablewillClose={() => setSwiping({...swiping, [item.name]: false})}>
+        <Item recipe={item} setName={setSelectedName} setIngredient={setSelectedIngredient}
+        setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible} swiping={swiping}/>
+        </Swipeable>}
       />
-      </SafeAreaView>
+      </View>
       <RecipeModal modalVisible={addModalVisible} setModalVisible={setAddModalVisible} 
       name={name} ingredient={ingredient} method={method} 
       setName={setName} setIngredient={setIngredient} setMethod={setMethod} 
@@ -42,16 +97,18 @@ export default function Recipe({navigation}) {
       setRecipeList={setRecipeList} setFoodList={setFoodList}>
       </RecipeModal>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={[styles.button,styles.buttonClose]}>
-        <Text style={styles.textStyle}>Add</Text>
+        <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={styles.iosbutton}>
+          <AntDesign name="pluscircleo" size={24} color="#007AFF" />
+          <Text style={styles.addTextStyle}> New Recipe</Text>
         </TouchableOpacity>
         {!isRecommend && <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList,setIsRecommend)} 
-        style={[styles.button,styles.buttonClose]}>
-        <Text style={styles.textStyle}>Recommend</Text>
+        style={styles.iosbutton}>
+          <MaterialCommunityIcons name='thumb-up' size={22} color='green'/>
+          <Text style={styles.recommendTextStyle}> Recommend</Text>
         </TouchableOpacity>}
-        {isRecommend && <TouchableOpacity  onPress={()=>getAllRecipe(setRecipeList,setIsRecommend)} 
-        style={[styles.button,styles.buttonClose]}>
-        <Text style={styles.textStyle}>Get All Recipes</Text>
+        {isRecommend && <TouchableOpacity onPress={()=>getAllRecipe(setRecipeList,setIsRecommend)} 
+        style={styles.iosbutton}>
+        <Text style={styles.recommendTextStyle}>All Recipes</Text>
         </TouchableOpacity>}
       </View>
     </View>
@@ -77,5 +134,36 @@ async function getAllRecipe(setRecipeList,setIsRecommend){
   .then(response => setIsRecommend(false))
   .catch(error => {
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
+  });
+}
+async function removeRecipe(name,ingredient,method,setRecipeList){
+  const message={
+    "name": name,
+    "ingredient": ingredient,
+    "method": method
+  }
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
+    method: "DELETE",
+    body: JSON.stringify(message),
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getIdToken()
+        .getJwtToken()}`
+    }
+  })
+  .then(response => {
+    if (response.ok){
+      response.json().then(response=>{
+        setRecipeList(response);;
+      })
+    }
+    else{
+      response.json().then(error=>{
+        Alert.alert('Error',error.message,[{text: 'OK'}]);
+      })
+    }
+  })
+  .catch(error => {
+    Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
   });
 }

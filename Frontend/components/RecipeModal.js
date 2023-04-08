@@ -92,11 +92,6 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         </TouchableOpacity>}
         <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await removeRecipe(name,ingredient,method,setRecipeList);restore()}}>
-          <Text style={styles.textStyle}>Remove Recipe</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonClose]}
           onPress={() => restore()}>
           <Text style={styles.textStyle}>Back</Text>
         </TouchableOpacity>
@@ -132,37 +127,6 @@ async function addRecipe(name,ingredient,method,setRecipeList){
       response.json().then(error=>{
         Alert.alert('Error',error.message,[{text: 'OK'}]);
 
-      })
-    }
-  })
-  .catch(error => {
-    Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
-  });
-}
-async function removeRecipe(name,ingredient,method,setRecipeList){
-  const message={
-    "name": name,
-    "ingredient": ingredient,
-    "method": method
-  }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
-    method: "DELETE",
-    body: JSON.stringify(message),
-    headers: {
-      Authorization: `Bearer ${(await Auth.currentSession())
-        .getIdToken()
-        .getJwtToken()}`
-    }
-  })
-  .then(response => {
-    if (response.ok){
-      response.json().then(response=>{
-        setRecipeList(response);;
-      })
-    }
-    else{
-      response.json().then(error=>{
-        Alert.alert('Error',error.message,[{text: 'OK'}]);
       })
     }
   })

@@ -2,40 +2,42 @@ import { StyleSheet } from "react-native";
 export  const styles = StyleSheet.create({
     container: {
       flex: 1,
+      overflow: 'visible',  
     },
     buttonContainer: {
       flex: 1,
-      backgroundColor: 'grey',
+      backgroundColor: '#E8E8E8',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
       flexDirection: 'row',
     },
     fridgeContainer: {
       flex: 1,
-      backgroundColor: 'grey',
+      backgroundColor: '#E8E8E8',
       justifyContent: 'space-between',
       paddingBottom: '10%',
       paddingHorizontal: '5%',
     },
     recipeContainer: {
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: '#E8E8E8',
       justifyContent: 'space-between',
     },
-    imageBackground: {
+    mainBackground: {
       flex: 1,
+      backgroundColor: 'white',
       justifyContent: 'flex-end',
       paddingBottom: '10%',
       paddingHorizontal: '5%',
     },
     fridge: {
       position:'absolute',
-      top: '15%',
+      top: '10%',
       left: '5%'
     },
     recipe:{
       position:'absolute',
-      top: '20%',
+      top: '15%',
       left: '30%',
     },
     back:{
@@ -56,10 +58,11 @@ export  const styles = StyleSheet.create({
     },
     food: {
       fontSize: 15,
+      textAlign: 'center',
     },
     title: {
-      fontSize: 15,
-      fontStyle: 'italic',
+      fontSize: 20,
+      textAlign: 'center',
       fontWeight: 'bold',
     },
     centeredView: {
@@ -91,19 +94,31 @@ export  const styles = StyleSheet.create({
       marginTop: 10,
     },
     button: {
-      width: '30%',
       borderRadius: 20,
       padding: 10,
       elevation: 2,
-      marginBottom: 10,
-      marginTop: 10,
+      marginBottom: 5,
+      marginTop: 5,
     },
-    buttonAdd: {
+    iosbutton: {
+      flexDirection: 'row',
       borderRadius: 20,
-      padding: 10,
+      padding: 0,
       elevation: 2,
-      marginBottom: 10,
-      marginTop: 10,
+      marginBottom: 5,
+      marginTop: 5,
+    },
+    deleteButton: {
+      backgroundColor: 'red',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 80,
+      borderRadius: 20,
+      padding: 20,
+      marginVertical: 8,
+    },
+    deleteButtonText: {
+      color: '#fff',
     },
     buttonOpen: {
       backgroundColor: '#F194FF',
@@ -132,6 +147,7 @@ export  const styles = StyleSheet.create({
       textAlign: 'center',
     },
     input: {
+      borderRadius: 20,
       height: 50,
       margin: 12,
       borderWidth: 1,
@@ -140,6 +156,7 @@ export  const styles = StyleSheet.create({
       fontSize: 20,
     },
     method: {
+      borderRadius: 20,
       height: 100,
       margin: 12,
       borderWidth: 1,
@@ -149,7 +166,19 @@ export  const styles = StyleSheet.create({
     },
     nameTitle: {
       fontSize: 25,
-      fontStyle: 'italic',
+      textAlign: 'center',
       fontWeight: 'bold',
+    },
+    addTextStyle: {
+      color: '#007AFF',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      fontSize: 20,
+    },
+    recommendTextStyle: {
+      color: 'green',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      fontSize: 20,
     }
   });

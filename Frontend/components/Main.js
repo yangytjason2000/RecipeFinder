@@ -14,8 +14,7 @@ export default function Main({navigation}) {
   const [recipeList,setRecipeList] = store.useState("recipeList");
   const [signedIn,setSignedIn] = store.useState("signedIn");
   return (
-    <FadeInView style={styles.container}>
-      <ImageBackground source={require( '../assets/background.png')} style={styles.imageBackground}>     
+    <View style={styles.mainBackground}>  
         <TouchableOpacity onPress={()=>navigation.navigate('Fridge')} style={styles.fridge}>
           <Image source={require( '../assets/fridge.png')}></Image>
         </TouchableOpacity>
@@ -34,8 +33,7 @@ export default function Main({navigation}) {
         {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>signOut(setSignedIn)}>
           <Text style={styles.textStyle}>Sign out</Text>
         </TouchableOpacity>}
-      </ImageBackground>
-    </FadeInView>
+    </View>
   );
 }
 async function signOut(setSignedIn) {
