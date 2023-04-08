@@ -2,7 +2,7 @@ import {Text, TouchableOpacity,} from 'react-native';
 import { styles } from '../styles';
 const Item = ({recipe,setName,setIngredient,setMethod,setRecipeModalVisible,swiping}) => {
     function setSelected(){
-        if (swiping){
+        if (swiping[recipe.name]){
           return
         }
         setRecipeModalVisible(true);

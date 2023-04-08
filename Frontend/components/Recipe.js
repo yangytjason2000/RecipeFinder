@@ -6,7 +6,7 @@ import { getRecipe } from './getRecipe';
 import RecipeModal from './RecipeModal';
 import store from './store';
 import Item from './RecipeItem';
-
+import { updateErrorCheck } from './RecipeErrorCheck';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
@@ -42,7 +42,7 @@ export default function Recipe({navigation}) {
 
 
   const handleDelete = async (item) => {
-    await removeRecipe(item.name,item.ingredient,item.method, setRecipeList);
+    await updateErrorCheck(item.name,item.ingredient,item.method,setRecipeList,removeRecipe);
     setSwiping({...swiping, [item.name]: false});
   }
 
@@ -101,18 +101,28 @@ export default function Recipe({navigation}) {
           <AntDesign name="pluscircleo" size={24} color="#007AFF" />
           <Text style={styles.addTextStyle}> New Recipe</Text>
         </TouchableOpacity>
-        {!isRecommend && <TouchableOpacity  onPress={()=>getRecommendRecipe(setRecipeList,setIsRecommend)} 
+        {!isRecommend && <TouchableOpacity  
+        onPress={async ()=>await recommendErrorCheck(setRecipeList,setIsRecommend,getRecommendRecipe)} 
         style={styles.iosbutton}>
           <MaterialCommunityIcons name='thumb-up' size={22} color='green'/>
           <Text style={styles.recommendTextStyle}> Recommend</Text>
         </TouchableOpacity>}
-        {isRecommend && <TouchableOpacity onPress={()=>getAllRecipe(setRecipeList,setIsRecommend)} 
+        {isRecommend && <TouchableOpacity 
+        onPress={async ()=>await recommendErrorCheck(setRecipeList,setIsRecommend,getAllRecipe)} 
         style={styles.iosbutton}>
         <Text style={styles.recommendTextStyle}>All Recipes</Text>
         </TouchableOpacity>}
       </View>
     </View>
   );
+}
+async function recommendErrorCheck(setRecipeList,setIsRecommend,recommendMethod){
+  try {
+    await Auth.currentAuthenticatedUser()
+    .then(()=>recommendMethod(setRecipeList,setIsRecommend))
+  } catch (error) {
+    Alert.alert('Recommend error',error.message, [{ text: 'Ok' }]);
+  }
 }
 async function getRecommendRecipe(setRecipeList,setIsRecommend){
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe/recommend',{

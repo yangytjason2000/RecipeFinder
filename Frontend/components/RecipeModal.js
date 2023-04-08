@@ -1,11 +1,11 @@
 import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Alert, TextInput,KeyboardAvoidingView} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import RecipeFridge from './recipeFridge';
 import ConfirmModal from './confirm';
 import { getRecipe } from './getRecipe';
+import { updateErrorCheck } from './RecipeErrorCheck';
 
 export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
     setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
@@ -72,8 +72,8 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         </TouchableOpacity>}
         {(isConfirmed && !confirmedPressed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
-          onPress={async () => {await consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed);
-            await addRecipe(name,ingredient,method,setRecipeList);}}>
+          onPress={async () => {await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
+            await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);}}>
           <Text style={styles.textStyle}>Confirm Eat This!</Text>
         </TouchableOpacity>}
 
@@ -82,12 +82,12 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
 
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await addRecipe(name,ingredient,method,setRecipeList);restore();}}>
+          onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
           <Text style={styles.textStyle}>Update Recipe</Text>
         </TouchableOpacity>}
         {isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await addRecipe(name,ingredient,method,setRecipeList);restore();}}>
+          onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
           <Text style={styles.textStyle}>Add Recipe</Text>
         </TouchableOpacity>}
         <TouchableOpacity
@@ -133,6 +133,14 @@ async function addRecipe(name,ingredient,method,setRecipeList){
   .catch(error => {
     Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
   });
+}
+async function consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeMethod){
+  try {
+    await Auth.currentAuthenticatedUser()
+    .then(()=>consumeMethod(name,ingredient,method,setFoodList,setConfirmedPressed))
+  } catch (error) {
+    Alert.alert('Eat this error',error.message, [{ text: 'Ok' }]);
+  }
 }
 async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed){
   const message={
