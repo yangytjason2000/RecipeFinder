@@ -9,7 +9,6 @@ import { updateErrorCheck } from './RecipeErrorCheck';
 
 export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
     setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
-    const [status,setStatus] = useState(0);
     const [isEditingName,setIsEditingName] = useState(false);
     const [isEditingMethod,setIsEditingMethod] = useState(false);
     const [confirmModalVisible,setConfirmModalVisible] = useState(false);

@@ -1,18 +1,28 @@
-import { StyleSheet, Text, View,ImageBackground, TouchableOpacity, Image, Animated, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableOpacity, Image, Animated, SafeAreaView } from 'react-native';
 import { useState, useRef, useEffect} from 'react';
-import { FadeInView } from './FadeInView';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import LoginModal from './LoginModal';
-import { useGlobalState } from 'state-pool';
 import store from './store';
+import { getFood } from './getFood';
+import { getRecipe } from './getRecipe';
 export default function Main({navigation}) {
   const [loginModalVisible,setLoginModalVisible] = useState(false);
   const [signupModalVisible,setSignupModalVisible] = useState(false);
-  const [status,setStatus]=store.useState("status");
   const [foodList, setFoodList] = store.useState("foodList");
   const [recipeList,setRecipeList] = store.useState("recipeList");
   const [signedIn,setSignedIn] = store.useState("signedIn");
+  useEffect(()=>{
+    const confirmSignedIn = async() => {
+      try {
+        await Auth.currentAuthenticatedUser()
+        .then(()=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
+      } catch {
+        setSignedIn(false);
+      }
+    }
+    confirmSignedIn();
+    },[])
   return (
     <View style={styles.mainBackground}>  
         <TouchableOpacity onPress={()=>navigation.navigate('Fridge')} style={styles.fridge}>
@@ -30,16 +40,17 @@ export default function Main({navigation}) {
         {!signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
           <Text style={styles.textStyle}>Sign in</Text>
         </TouchableOpacity>}
-        {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>signOut(setSignedIn)}>
+        {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} 
+        onPress={()=>signOut(setSignedIn,setFoodList,setRecipeList)}>
           <Text style={styles.textStyle}>Sign out</Text>
         </TouchableOpacity>}
     </View>
   );
 }
-async function signOut(setSignedIn) {
+async function signOut(setSignedIn,setFoodList,setRecipeList) {
   try {
       await Auth.signOut({ global: true })
-      .then(response=>setSignedIn(false));
+      .then(()=>{setSignedIn(false);setFoodList([]);setRecipeList([]);});
   } catch (error) {
       Alert.alert('Sign out error',error.message, [{ text: 'Ok' }]);
   }

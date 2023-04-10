@@ -31,28 +31,7 @@ export default function App() {
   });
   
   const Stack = createNativeStackNavigator();
-  // const [status,setStatus]=useGlobalState("status");
-  // const [foodList, setFoodList] = useGlobalState("foodList");
-  // const [recipeList,setRecipeList] = useGlobalState("recipeList");
-  // const [signedIn,setSignedIn] = useGlobalState("signedIn");
-  // const [isRecommend,setIsRecommend] = useGlobalState("isRecommend");
 
-
-  const [foodList, setFoodList] = store.useState("foodList");
-  const [recipeList,setRecipeList] = store.useState("recipeList");
-  const [signedIn,setSignedIn] = store.useState("signedIn");
-
-  useEffect(()=>{
-    const confirmSignedIn = async() => {
-      try {
-        await Auth.currentAuthenticatedUser()
-        .then(()=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
-      } catch {
-        setSignedIn(false);
-      }
-    }
-    confirmSignedIn();
-    },[])
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="RecipeFinder">

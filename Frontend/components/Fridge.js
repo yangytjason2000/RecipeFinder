@@ -1,6 +1,5 @@
 import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { FadeInView } from './FadeInView';
 import { styles } from '../styles';
 import FoodModal from './FoodModal';
 import store from './store';
@@ -16,7 +15,7 @@ export default function Fridge({navigation}) {
   const [number,setNumber] = useState('');
   const [unit,setUnit] = useState('');
   const [date,setDate] = useState(new Date());
-
+  
   const [selectedName,setSelectedName] = useState('');
   const [selectedEmoji,setSelectedEmoji] = useState('');
   const [selectedNumber,setSelectedNumber] = useState('');
