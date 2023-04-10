@@ -28,22 +28,24 @@ export default function Recipe({navigation}) {
   const [selectedMethod, setSelectedMethod] = useState('');
 
 
-  const [swiping,setSwiping] = useState({});
+  const swiping = useRef({});
 
   const swipeableRefs = useRef({});
 
   useEffect(() => {
-    for (const key in swiping) {
-      if (swiping[key] === false) {
-        swipeableRefs.current[key].close();
+    for (const key in swiping.current) {
+      if (swiping.current[key] === false) {
+        if (swipeableRefs.current[key]!=null){
+          swipeableRefs.current[key].close();
+        }
       }
     }
-  }, [swiping]);
+  }, [recipeList]);
 
 
   const handleDelete = async (item) => {
     await updateErrorCheck(item.name,item.ingredient,item.method,setRecipeList,removeRecipe);
-    setSwiping({...swiping, [item.name]: false});
+    delete swiping.current[item.name]
   }
 
   return (
@@ -79,10 +81,10 @@ export default function Recipe({navigation}) {
        </TouchableOpacity>
        
         }
-        onSwipeableWillOpen={() => setSwiping({...swiping, [item.name]: true})}
-        onSwipeablewillClose={() => setSwiping({...swiping, [item.name]: false})}>
+        onSwipeableWillOpen={() => { swiping.current[item.name] = true; }}
+        onSwipeableWillClose={() => { swiping.current[item.name] = false; }}>
         <Item recipe={item} setName={setSelectedName} setIngredient={setSelectedIngredient}
-        setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible} swiping={swiping}/>
+        setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible}/>
         </Swipeable>}
       />
       </View>

@@ -1,10 +1,8 @@
-import {Text, TouchableOpacity,} from 'react-native';
+import {Text,} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles } from '../styles';
-const Item = ({recipe,setName,setIngredient,setMethod,setRecipeModalVisible,swiping}) => {
+const Item = ({recipe,setName,setIngredient,setMethod,setRecipeModalVisible}) => {
     function setSelected(){
-        if (swiping[recipe.name]){
-          return
-        }
         setRecipeModalVisible(true);
         setName(recipe.name);
         setIngredient(recipe.ingredient);
