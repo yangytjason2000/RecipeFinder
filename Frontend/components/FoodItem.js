@@ -1,4 +1,5 @@
-import {Text, TouchableOpacity,} from 'react-native';
+import {Text, } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles } from '../styles';
 const Item = ({food,setName,setEmoji,setNumber,setUnit,setDate,setFoodModalVisible,isRecipe=false}) => {
     function setSelected(){

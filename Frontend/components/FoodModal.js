@@ -43,20 +43,27 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={async ()=> isRecipe ? saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
-                  : await updateErrorCheck(name,number,unit,emoji,date,setFoodList,restore,addFood)}>
+                onPress={async ()=> {if (isRecipe) {
+                  saveRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
+                } else {
+                  await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
+                  restore();
+                }}}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={async ()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
-              : await updateErrorCheck(name,number,unit,emoji,date,setFoodList,restore,addFood)}>
+              onPress={async ()=> {if (isRecipe) {
+                addRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
+              } else {
+                await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
+                restore();
+              }}}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
-            {deleteFlag && <TouchableOpacity 
+            {(deleteFlag && isRecipe) && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={async ()=> isRecipe ? removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore)
-                : await updateErrorCheck(name,number,unit,emoji,date,setFoodList,restore,removeFood)}>
+              onPress={async ()=> removeRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore)}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity
@@ -93,7 +100,7 @@ function removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
   setFoodList(newList);
   restore();
 }
-async function addFood(name,number,unit,emoji,date,setFoodList,restore){
+async function addFood(name,number,unit,emoji,date,setFoodList){
   const message={
     "name": name,
     "emoji": emoji,
@@ -114,7 +121,6 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
     if (response.ok){
       response.json().then(response=>{
         setFoodList(response);
-        restore();
       })
     }
     else{
@@ -125,39 +131,5 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
   })
   .catch(error => {
     Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
-  });
-}
-async function removeFood(name,number,unit,emoji,date,setFoodList,restore){
-  const message={
-    "name": name,
-    "emoji": emoji,
-    "quantity": number,
-    "unit": unit,
-    "date": date,
-  }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
-    method: "DELETE",
-    body: JSON.stringify(message),
-    headers: {
-      Authorization: `Bearer ${(await Auth.currentSession())
-        .getIdToken()
-        .getJwtToken()}`
-    }
-  })
-  .then(response => {
-    if (response.ok){
-      response.json().then(response=>{
-        setFoodList(response);
-        restore();
-      })
-    }
-    else{
-      response.json().then(error=>{
-        Alert.alert('Error',error.message,[{text: 'OK'}]);
-      })
-    }
-  })
-  .catch(error => {
-    Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
   });
 }
