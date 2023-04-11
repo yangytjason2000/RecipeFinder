@@ -10,6 +10,8 @@ import { updateErrorCheck } from './RecipeErrorCheck';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
+import { SearchBar } from 'react-native-elements';
+
 export default function Recipe({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
@@ -27,6 +29,7 @@ export default function Recipe({navigation}) {
   const [selectedIngredient,setSelectedIngredient] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState('');
 
+  const [searchQuery, setSearchQuery] = useState('');
 
   const swiping = useRef({});
 
@@ -57,9 +60,16 @@ export default function Recipe({navigation}) {
 
   return (
     <View style={styles.fridgeContainer}>
+      <SearchBar
+        platform={Platform.OS}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search"
+        containerStyle={{ backgroundColor: '#E8E8E8' }}
+      />
       <View style={styles.container}>
       <FlatList
-        data={recipeList}
+        data={recipeList.filter(item => item.name.startsWith(searchQuery))}
         renderItem={({item}) => 
         <Swipeable 
           ref={ref => swipeableRefs.current[item.name] = ref}

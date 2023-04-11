@@ -8,6 +8,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import store from './store';
 import Item from './FoodItem';
+import { SearchBar } from 'react-native-elements';
 export default function Fridge({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [foodModalVisible,setFoodModalVisible] = useState(false);
@@ -26,6 +27,7 @@ export default function Fridge({navigation}) {
   const [selectedUnit,setSelectedUnit] = useState('');
   const [selectedDate,setSelectedDate] = useState(new Date());
 
+  const [searchQuery, setSearchQuery] = useState('');
   const swiping = useRef({});
 
   const swipeableRefs = useRef({});
@@ -56,9 +58,16 @@ export default function Fridge({navigation}) {
 
   return (
     <View style={styles.fridgeContainer}>
+      <SearchBar
+        platform={Platform.OS}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search"
+        containerStyle={{ backgroundColor: '#E8E8E8' }}
+      />
       <View style={styles.container}>
       <FlatList
-        data={foodList}
+        data={foodList.filter(item => item.name.startsWith(searchQuery))}
         renderItem={({item}) => 
         <Swipeable 
           ref={ref => swipeableRefs.current[item.name] = ref}
