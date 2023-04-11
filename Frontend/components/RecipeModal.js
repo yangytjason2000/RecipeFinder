@@ -39,13 +39,13 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         <View style={styles.modalView}>
         {(!isEditingName && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingName(!isEditingName)}>
-            <Text style={styles.title}>{name}</Text> 
+            <Text style={styles.title}>{name+'\n'}</Text> 
           </TouchableOpacity>}
         {(isAdd) &&
         <Text style={styles.title}>Name</Text>}
         {(isEditingName || isAdd) &&
         <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
-
+        <Text style={styles.title}>Ingredients</Text>
         <RecipeFridge foodList={ingredient} setFoodList={setIngredient}/>
         
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}

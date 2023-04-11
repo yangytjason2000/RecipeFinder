@@ -175,6 +175,9 @@ export  const styles = StyleSheet.create({
       textAlign: 'center',
       fontSize: 20,
     },
+    recipeAddIngredientTextSize: {
+      fontSize: 15,
+    },
     recommendTextStyle: {
       color: 'green',
       fontWeight: 'bold',

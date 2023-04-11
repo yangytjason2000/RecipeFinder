@@ -39,8 +39,8 @@ export default function RecipeFridge({foodList,setFoodList}) {
       setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setUnit={setSelectedUnit}
       setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={true}/>
       <TouchableOpacity  onPress={()=>setModalVisible(true)} style={styles.iosbutton}>
-        <AntDesign name="pluscircleo" size={24} color="#007AFF" />
-        <Text style={styles.addTextStyle}> Ingredients</Text>
+        <AntDesign name="pluscircleo" size={20} color="#007AFF" />
+        <Text style={[styles.addTextStyle,styles.recipeAddIngredientTextSize]}> Ingredients</Text>
       </TouchableOpacity>
     </View>
   );
