@@ -69,7 +69,7 @@ export default function Recipe({navigation}) {
       />
       <View style={styles.container}>
       <FlatList
-        data={recipeList.filter(item => item.name.startsWith(searchQuery))}
+        data={recipeList.filter(item => item.name.includes(searchQuery))}
         renderItem={({item}) => 
         <Swipeable 
           ref={ref => swipeableRefs.current[item.name] = ref}

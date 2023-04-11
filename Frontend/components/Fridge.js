@@ -67,7 +67,7 @@ export default function Fridge({navigation}) {
       />
       <View style={styles.container}>
       <FlatList
-        data={foodList.filter(item => item.name.startsWith(searchQuery))}
+        data={foodList.filter(item => (item.name.includes(searchQuery) || item.emoji.includes(searchQuery)))}
         renderItem={({item}) => 
         <Swipeable 
           ref={ref => swipeableRefs.current[item.name] = ref}
