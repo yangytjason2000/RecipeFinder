@@ -120,6 +120,7 @@ def post_item(table, payload, username):
         for ingredient in ingredients:
             if not is_number(ingredient['quantity']):
                 return serialize_invalid_response('Invalid quantity')
+    item['name'] = item['name'].strip()
     item['username'] = username
     table.put_item(Item=item)
     return get_item(table,username)
