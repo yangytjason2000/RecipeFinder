@@ -5,7 +5,7 @@ export  const styles = StyleSheet.create({
       overflow: 'visible',  
     },
     buttonContainer: {
-      flex: 1,
+      height: "15%",
       backgroundColor: '#E8E8E8',
       justifyContent: 'space-between',
       alignItems: 'flex-end',

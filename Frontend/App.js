@@ -1,14 +1,7 @@
-import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableHighlight } from 'react-native';
-import { useState, useEffect} from 'react';
 import  Main  from './components/Main.js';
 import Amplify,{ Auth } from '@aws-amplify/core';
 import Fridge from './components/Fridge.js';
 import Recipe from './components/Recipe.js';
-import {useGlobalState} from 'state-pool';
-import store from './components/store.js';
-import { StoreProvider } from 'state-pool';
-import { getFood } from './components/getFood.js';
-import { getRecipe } from './components/getRecipe.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 export default function App() {
