@@ -37,18 +37,12 @@ export default function Recipe({navigation}) {
 
   useEffect(() => {
     for (const key in swipeableRefs.current){
-      if (swiping.current[key]!=null){
-        if (swiping.current[key] === false) {
-          if (swipeableRefs.current[key]!=null){
-            swipeableRefs.current[key].close();
-          }
-        }
-      }
-      else{
-        if (swipeableRefs.current[key]!=null){
+      if (swiping.current[key]!=null && swiping.current[key] === false && swipeableRefs.current[key]!=null){
           swipeableRefs.current[key].close();
-        }
       }
+      else if (swiping.current[key]===null && swipeableRefs.current[key]!=null){
+        swipeableRefs.current[key].close();
+    }
     }
   }, [recipeList]);
 
