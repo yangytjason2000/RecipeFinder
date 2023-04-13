@@ -28,25 +28,15 @@ export default function Fridge({navigation}) {
   const [selectedDate,setSelectedDate] = useState(new Date());
 
   const [searchQuery, setSearchQuery] = useState('');
-  const swiping = useRef({});
 
   const swipeableRefs = useRef({});
 
-  useEffect(() => {
-    for (const key in swipeableRefs.current){
-      if (swiping.current[key]!=null && swiping.current[key] === false && swipeableRefs.current[key]!=null){
-          swipeableRefs.current[key].close();
-      }
-      else if (swiping.current[key]===null && swipeableRefs.current[key]!=null){
-          swipeableRefs.current[key].close();
-      }
-    }
-  }, [foodList]);
-
   const handleDelete = async (item) => {
     await updateErrorCheck(item.name,item.number,item.unit,item.emoji,item.date,setFoodList,removeFood);
-    delete swipeableRefs.current[item.name];
-    delete swiping.current[item.name];
+    if (swipeableRefs.current[item.name]) {
+      swipeableRefs.current[item.name].close();
+      delete swipeableRefs.current[item.name];
+    }
   }
 
   return (
@@ -89,8 +79,8 @@ export default function Fridge({navigation}) {
        </TouchableOpacity>
        
         }
-        onSwipeableWillOpen={() => { swiping.current[item.name] = true; }}
-        onSwipeableWillClose={() => { swiping.current[item.name] = false; }}>
+        onSwipeableWillOpen={() => { swipeableRefs.current[item.name].swiping = true;}}
+        onSwipeableWillClose={() => { swipeableRefs.current[item.name].swiping = false;}}>
         <Item food={item} setName={setSelectedName} setEmoji={setSelectedEmoji} 
         setNumber={setSelectedNumber} setUnit={setSelectedUnit} setDate={setSelectedDate} 
         setFoodModalVisible={setFoodModalVisible} isRecipe={false}/>

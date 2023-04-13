@@ -35,21 +35,14 @@ export default function Recipe({navigation}) {
 
   const swipeableRefs = useRef({});
 
-  useEffect(() => {
-    for (const key in swipeableRefs.current){
-      if (swiping.current[key]!=null && swiping.current[key] === false && swipeableRefs.current[key]!=null){
-          swipeableRefs.current[key].close();
-      }
-      else if (swiping.current[key]===null && swipeableRefs.current[key]!=null){
-        swipeableRefs.current[key].close();
-    }
-    }
-  }, [recipeList]);
 
 
   const handleDelete = async (item) => {
     await updateErrorCheck(item.name,item.ingredient,item.method,setRecipeList,removeRecipe);
-    delete swiping.current[item.name]
+    if (swipeableRefs.current[item.name]) {
+      swipeableRefs.current[item.name].close();
+      delete swipeableRefs.current[item.name];
+    }
   }
 
   return (
@@ -63,7 +56,7 @@ export default function Recipe({navigation}) {
       />
       <View style={styles.container}>
       <FlatList
-        data={recipeList ? filteredRecipeList = recipeList.filter(item => item.name.includes(searchQuery)): []}
+        data={recipeList ? recipeList.filter(item => item.name.includes(searchQuery)): []}
         renderItem={({item}) => 
         <Swipeable 
           ref={ref => swipeableRefs.current[item.name] = ref}
@@ -92,8 +85,8 @@ export default function Recipe({navigation}) {
        </TouchableOpacity>
        
         }
-        onSwipeableWillOpen={() => { swiping.current[item.name] = true; }}
-        onSwipeableWillClose={() => { swiping.current[item.name] = false; }}>
+        onSwipeableWillOpen={() => {  swipeableRefs.current[item.name].swiping = true; }}
+        onSwipeableWillClose={() => {  swipeableRefs.current[item.name].swiping = false; }}>
         <Item recipe={item} setName={setSelectedName} setIngredient={setSelectedIngredient}
         setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible}/>
         </Swipeable>}
