@@ -30,15 +30,19 @@ export  const styles = StyleSheet.create({
       paddingBottom: '10%',
       paddingHorizontal: '5%',
     },
+    imageContainer: {
+      position: 'relative',
+      flex: 1,
+    },
     fridge: {
-      position:'absolute',
-      top: '10%',
-      left: '5%'
+      position: 'absolute',
+      bottom: '10%',
+      right: 0,
     },
     recipe:{
       position:'absolute',
-      top: '15%',
-      left: '30%',
+      bottom: '10%',
+      right: 0,
     },
     back:{
       borderWidth:1,

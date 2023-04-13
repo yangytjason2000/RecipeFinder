@@ -25,25 +25,27 @@ export default function Main({navigation}) {
     },[])
   return (
     <View style={styles.mainBackground}>  
+      <View style={styles.imageContainer}>
         <TouchableOpacity onPress={()=>navigation.navigate('Fridge')} style={styles.fridge}>
-          <Image source={require( '../assets/fridge.png')}></Image>
+          <Image source={require( '../assets/comic_fridge.png')}></Image>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate('Recipe')} style={styles.recipe}>
-          <Image source={require('../assets/recipe.png')}></Image>
+          <Image source={require('../assets/comic_recipe.png')}></Image>
         </TouchableOpacity> 
-        {!signedIn && <LoginModal modalVisible={loginModalVisible} 
-        setModalVisible={setLoginModalVisible} setSignupModalVisible={setSignupModalVisible} 
-        setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn}/>}
-        {!signedIn && <LoginModal modalVisible={signupModalVisible} 
-        setModalVisible={setSignupModalVisible} setSignupModalVisible={setSignupModalVisible} 
-        setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn} loginFlag={false}/>}
-        {!signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
-          <Text style={styles.textStyle}>Sign in</Text>
-        </TouchableOpacity>}
-        {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} 
-        onPress={()=>signOut(setSignedIn,setFoodList,setRecipeList)}>
-          <Text style={styles.textStyle}>Sign out</Text>
-        </TouchableOpacity>}
+      </View>
+      {!signedIn && <LoginModal modalVisible={loginModalVisible} 
+      setModalVisible={setLoginModalVisible} setSignupModalVisible={setSignupModalVisible} 
+      setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn}/>}
+      {!signedIn && <LoginModal modalVisible={signupModalVisible} 
+      setModalVisible={setSignupModalVisible} setSignupModalVisible={setSignupModalVisible} 
+      setFoodList={setFoodList} setRecipeList={setRecipeList} setSignedIn={setSignedIn} loginFlag={false}/>}
+      {!signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>setLoginModalVisible(true)}>
+        <Text style={styles.textStyle}>Sign in</Text>
+      </TouchableOpacity>}
+      {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} 
+      onPress={()=>signOut(setSignedIn,setFoodList,setRecipeList)}>
+        <Text style={styles.textStyle}>Sign out</Text>
+      </TouchableOpacity>}
     </View>
   );
 }
