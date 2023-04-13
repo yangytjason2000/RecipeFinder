@@ -8,23 +8,27 @@ import { getRecipe } from './getRecipe';
 import { updateErrorCheck } from './RecipeErrorCheck';
 
 export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
-    setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
-    const [isEditingName,setIsEditingName] = useState(false);
-    const [isEditingMethod,setIsEditingMethod] = useState(false);
-    const [confirmModalVisible,setConfirmModalVisible] = useState(false);
-    const [isConfirmed,setIsConfirmed] = useState(false);
-    const [confirmedPressed,setConfirmedPressed] = useState(false)
-    function restore(){
-      setModalVisible(!modalVisible);
-      setIsEditingName(false);
-      setIsEditingMethod(false);
-      setName('');
-      setMethod('');
-      setIngredient([]);
-      setConfirmModalVisible(false);
-      setIsConfirmed(false);
-      setConfirmedPressed(false);
-    }
+  setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
+  const [isEditingName,setIsEditingName] = useState(false);
+  const [isEditingMethod,setIsEditingMethod] = useState(false);
+  const [confirmModalVisible,setConfirmModalVisible] = useState(false);
+  const [isConfirmed,setIsConfirmed] = useState(false);
+  const [confirmedPressed,setConfirmedPressed] = useState(false)
+  function restore(){
+    setModalVisible(!modalVisible);
+    setIsEditingName(false);
+    setIsEditingMethod(false);
+    setName('');
+    setMethod('');
+    setIngredient([]);
+    setConfirmModalVisible(false);
+    setIsConfirmed(false);
+    setConfirmedPressed(false);
+  }
+  async function consumeConfirm(){
+    await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
+    await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);
+  }
   return (
       <Modal
         animationType="slide"
@@ -49,7 +53,7 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
         <RecipeFridge foodList={ingredient} setFoodList={setIngredient}/>
         
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
-        setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed}/>
+        setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed} consumeConfirm={consumeConfirm}/>
         <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1, alignItems: 'center', }}
@@ -68,12 +72,6 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
           style={[styles.button, styles.buttonConsume]}
           onPress={() => setConfirmModalVisible(true)}>
           <Text style={styles.textStyle}>Eat This!</Text>
-        </TouchableOpacity>}
-        {(isConfirmed && !confirmedPressed) && <TouchableOpacity
-          style={[styles.button, styles.buttonConsume]}
-          onPress={async () => {await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
-            await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);}}>
-          <Text style={styles.textStyle}>Confirm Eat This!</Text>
         </TouchableOpacity>}
 
         {confirmedPressed && 
