@@ -108,7 +108,7 @@ async function addFood(name,number,unit,emoji,date,setFoodList){
     "unit": unit,
     "date": date,
   }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredients?database=ingredient&mode=single',{
     method: "POST",
     body: JSON.stringify(message),
     headers: {

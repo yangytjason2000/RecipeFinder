@@ -1,6 +1,6 @@
 import Amplify,{ Auth } from 'aws-amplify';
 export async function getFood(setFoodList){
-    await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
+    await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredients?database=ingredient&mode=all',{
       method: "GET",
       headers: {
         Authorization: `Bearer ${(await Auth.currentSession())

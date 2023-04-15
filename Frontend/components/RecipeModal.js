@@ -105,7 +105,7 @@ async function addRecipe(name,ingredient,method,setRecipeList){
     "method": method,
     "date": new Date(),
   }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipes?database=recipe&mode=single',{
     method: "POST",
     body: JSON.stringify(message),
     headers: {
@@ -145,7 +145,7 @@ async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPres
     "ingredient": ingredient,
     "method": method
   }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient/consume',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredients?database=ingredient&mode=consume',{
     method: "POST",
     body: JSON.stringify(message),
     headers: {

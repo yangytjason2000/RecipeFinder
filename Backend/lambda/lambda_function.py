@@ -16,20 +16,19 @@ def lambda_handler(event, context):
     method = event['httpMethod']
     if method not in METHODS:
         return serialize_invalid_response(f'Unsupported HTTP method: {method}')
-    path_instruction = event['path'][1:].split('/')
-    table_name = path_instruction[0]
+    table_name = event['queryStringParameters']['database']
     if table_name not in TABLES:
         return serialize_invalid_response(f'Invalid resource name: {table_name}')
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
     username = get_username(event)
     if method == 'GET':
-        if len(path_instruction)>1 and path_instruction[1]=='recommend':
+        if event['queryStringParameters']['mode']=='recommend':
             return recommend_item(table,username)
         else:
             return get_item(table,username)
     if method == 'POST':
-        if len(path_instruction)>1 and path_instruction[1]=='consume':
+        if event['queryStringParameters']['mode']=='consume':
             return consume_item(table, event['body'],username)
         else:
             return post_item(table, event['body'],username)

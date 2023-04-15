@@ -131,7 +131,7 @@ async function recommendErrorCheck(setRecipeList,setIsRecommend,recommendMethod)
   }
 }
 async function getRecommendRecipe(setRecipeList,setIsRecommend){
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe/recommend',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipes?database=recipe&mode=recommend',{
     method: "GET",
     headers: {
       Authorization: `Bearer ${(await Auth.currentSession())
@@ -145,6 +145,7 @@ async function getRecommendRecipe(setRecipeList,setIsRecommend){
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
   });
 }
+
 async function getAllRecipe(setRecipeList,setIsRecommend){
   await getRecipe(setRecipeList)
   .then(response => setIsRecommend(false))
@@ -152,13 +153,14 @@ async function getAllRecipe(setRecipeList,setIsRecommend){
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
   });
 }
+
 async function removeRecipe(name,ingredient,method,setRecipeList){
   const message={
     "name": name,
     "ingredient": ingredient,
     "method": method
   }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipe',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipes?database=recipe',{
     method: "DELETE",
     body: JSON.stringify(message),
     headers: {
