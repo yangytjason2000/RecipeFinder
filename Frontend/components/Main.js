@@ -52,7 +52,7 @@ export default function Main({navigation}) {
 async function signOut(setSignedIn,setFoodList,setRecipeList) {
   try {
       await Auth.signOut({ global: true })
-      .then(()=>{setSignedIn(false);setFoodList([]);setRecipeList([]);});
+      .then(()=>{setSignedIn(false);setFoodList([]);setRecipeList([]);setSignupModalVisible(false);setLoginModalVisible(false)});
   } catch (error) {
       Alert.alert('Sign out error',error.message, [{ text: 'Ok' }]);
   }

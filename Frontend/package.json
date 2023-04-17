@@ -23,6 +23,7 @@
     "react-native": "0.70.5",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.9.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "state-pool": "^0.9.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, TouchableOpacity, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { FadeInView } from './FadeInView';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
 import { getUsername } from './getUsername';
 import { styles } from '../styles';
@@ -27,6 +27,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
+        <KeyboardAwareScrollView>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -74,6 +75,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
           </View>
         </View>
         </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
         </Modal>
   );
 }
