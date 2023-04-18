@@ -16,26 +16,18 @@ export default function Recipe({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
 
-  const [foodList, setFoodList] = store.useState("foodList");
   const [recipeList,setRecipeList] = store.useState("recipeList");
   const [isRecommend,setIsRecommend] = store.useState("isRecommend");
 
-  //name,emoji,number
-  const [name,setName] = useState('');
-  const [ingredient,setIngredient] = useState([]);
-  const [method,setMethod] = useState('');
-
-  const [selectedName,setSelectedName] = useState('');
-  const [selectedIngredient,setSelectedIngredient] = useState([]);
-  const [selectedMethod, setSelectedMethod] = useState('');
-
   const [searchQuery, setSearchQuery] = useState('');
 
-  const swiping = useRef({});
 
   const swipeableRefs = useRef({});
 
-
+  const navigateToRecipe = (item) => {
+    navigation.navigate('Modify Recipe',
+    {initName:item.name,initIngredient:item.ingredient,initMethod:item.method,isAdd:false})
+  }
 
   const handleDelete = async (item) => {
     await updateErrorCheck(item.name,item.ingredient,item.method,setRecipeList,removeRecipe);
@@ -87,23 +79,13 @@ export default function Recipe({navigation}) {
         }
         onSwipeableWillOpen={() => {  swipeableRefs.current[item.name].swiping = true; }}
         onSwipeableWillClose={() => {  swipeableRefs.current[item.name].swiping = false; }}>
-        <Item recipe={item} setName={setSelectedName} setIngredient={setSelectedIngredient}
-        setMethod={setSelectedMethod} setRecipeModalVisible={setRecipeModalVisible}/>
+        <Item recipe={item} navigateToRecipe={navigateToRecipe}/>
         </Swipeable>}
       />
       </View>
-      <RecipeModal modalVisible={addModalVisible} setModalVisible={setAddModalVisible} 
-      name={name} ingredient={ingredient} method={method} 
-      setName={setName} setIngredient={setIngredient} setMethod={setMethod} 
-      setRecipeList={setRecipeList} isAdd={true} setFoodList={setFoodList}>
-      </RecipeModal>
-      <RecipeModal modalVisible={RecipeModalVisible} setModalVisible={setRecipeModalVisible} 
-      name={selectedName} ingredient={selectedIngredient} method={selectedMethod} 
-      setName={setSelectedName} setIngredient={setSelectedIngredient} setMethod={setSelectedMethod} 
-      setRecipeList={setRecipeList} setFoodList={setFoodList}>
-      </RecipeModal>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity  onPress={()=>setAddModalVisible(true)} style={styles.iosbutton}>
+        <TouchableOpacity  onPress={()=>navigation.navigate('Modify Recipe',{name:'',ingredient:[],method:'',isAdd:true})} 
+        style={styles.iosbutton}>
           <AntDesign name="pluscircleo" size={24} color="#007AFF" />
           <Text style={styles.addTextStyle}> New Recipe</Text>
         </TouchableOpacity>

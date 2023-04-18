@@ -2,6 +2,7 @@ import  Main  from './components/Main.js';
 import Amplify,{ Auth } from '@aws-amplify/core';
 import Fridge from './components/Fridge.js';
 import Recipe from './components/Recipe.js';
+import RecipeModal from './components/RecipeModal.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
         <Stack.Screen name="RecipeFinder" component={Main} />
         <Stack.Screen name="Fridge" component={Fridge} />
         <Stack.Screen name="Recipe" component={Recipe} />
+        <Stack.Screen name="Modify Recipe" component={RecipeModal}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

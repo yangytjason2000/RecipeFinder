@@ -6,41 +6,36 @@ import RecipeFridge from './recipeFridge';
 import ConfirmModal from './confirm';
 import { getRecipe } from './getRecipe';
 import { updateErrorCheck } from './RecipeErrorCheck';
-
-export default function RecipeModal({modalVisible,setModalVisible,name,method,ingredient,
-  setName,setMethod,setIngredient,setRecipeList,isAdd=false,setFoodList}) {
+import store from './store';
+export default function RecipeModal({route,navigation}) {
   const [isEditingName,setIsEditingName] = useState(false);
   const [isEditingMethod,setIsEditingMethod] = useState(false);
   const [confirmModalVisible,setConfirmModalVisible] = useState(false);
   const [isConfirmed,setIsConfirmed] = useState(false);
-  const [confirmedPressed,setConfirmedPressed] = useState(false)
+  const [confirmedPressed,setConfirmedPressed] = useState(false);
+  const {initName,initIngredient,initMethod,isAdd} = route.params;
+  const [name,setName] = useState(initName);
+  const [ingredient,setIngredient] = useState(initIngredient);
+  const [method,setMethod] = useState(initMethod);
+  
+  const [foodList, setFoodList] = store.useState("foodList");
+  const [recipeList,setRecipeList] = store.useState("recipeList");
+
   function restore(){
-    setModalVisible(!modalVisible);
     setIsEditingName(false);
     setIsEditingMethod(false);
-    setName('');
-    setMethod('');
-    setIngredient([]);
     setConfirmModalVisible(false);
     setIsConfirmed(false);
     setConfirmedPressed(false);
+    navigation.goBack();
   }
   async function consumeConfirm(){
     await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
     await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);
   }
   return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        setModalVisible(!modalVisible);
-      }}>
       <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
         {(!isEditingName && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingName(!isEditingName)}>
             <Text style={styles.title}>{name+'\n'}</Text> 
@@ -87,15 +82,8 @@ export default function RecipeModal({modalVisible,setModalVisible,name,method,in
           onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
           <Text style={styles.textStyle}>Add Recipe</Text>
         </TouchableOpacity>}
-        <TouchableOpacity
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => restore()}>
-          <Text style={styles.textStyle}>Back</Text>
-        </TouchableOpacity>
         </View>
-      </View>
       </TouchableWithoutFeedback>
-      </Modal>
   );
 }
 async function addRecipe(name,ingredient,method,setRecipeList){

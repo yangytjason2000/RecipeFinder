@@ -2,7 +2,6 @@ import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, Touchable
 import { useState,useRef,useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
-import { getUsername } from './getUsername';
 import { styles } from '../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { updateErrorCheck } from './FridgeErrorCheck';
@@ -27,7 +26,8 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+        contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>

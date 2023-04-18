@@ -22,7 +22,8 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+        contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>

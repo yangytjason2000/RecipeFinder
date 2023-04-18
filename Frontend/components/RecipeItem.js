@@ -1,12 +1,9 @@
 import {Text,} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles } from '../styles';
-const Item = ({recipe,setName,setIngredient,setMethod,setRecipeModalVisible}) => {
+const Item = ({recipe,navigateToRecipe}) => {
     function setSelected(){
-        setRecipeModalVisible(true);
-        setName(recipe.name);
-        setIngredient(recipe.ingredient);
-        setMethod(recipe.method);
+        navigateToRecipe(recipe);
     }
     return(<TouchableOpacity onPress={setSelected} style={styles.item}>
       <Text style={styles.food}>{recipe.name}</Text>
