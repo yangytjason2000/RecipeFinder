@@ -1,12 +1,12 @@
-import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Alert, TextInput,KeyboardAvoidingView} from 'react-native';
+import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, TouchableOpacity, Alert, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
-import { styles } from '../styles';
+import { styles } from '../../styles';
 import RecipeFridge from './recipeFridge';
-import ConfirmModal from './confirm';
+import ConfirmModal from '../confirm';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { updateErrorCheck } from './RecipeErrorCheck';
-import store from './store';
+import store from '../store';
 export default function RecipeModal({route,navigation}) {
   const [isEditingName,setIsEditingName] = useState(false);
   const [isEditingMethod,setIsEditingMethod] = useState(false);

@@ -1,8 +1,8 @@
 import  Main  from './components/Main.js';
 import Amplify,{ Auth } from '@aws-amplify/core';
-import Fridge from './components/Fridge.js';
-import Recipe from './components/Recipe.js';
-import RecipeModal from './components/RecipeModal.js';
+import Fridge from './components/Fridge/Fridge.js';
+import Recipe from './components/Recipe/Recipe.js';
+import RecipeModal from './components/Recipe/RecipeModal.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 export default function App() {

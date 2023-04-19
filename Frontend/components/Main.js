@@ -43,13 +43,13 @@ export default function Main({navigation}) {
         <Text style={styles.textStyle}>Sign in</Text>
       </TouchableOpacity>}
       {signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} 
-      onPress={()=>signOut(setSignedIn,setFoodList,setRecipeList)}>
+      onPress={()=>signOut(setSignedIn,setFoodList,setRecipeList,setSignupModalVisible,setLoginModalVisible)}>
         <Text style={styles.textStyle}>Sign out</Text>
       </TouchableOpacity>}
     </View>
   );
 }
-async function signOut(setSignedIn,setFoodList,setRecipeList) {
+async function signOut(setSignedIn,setFoodList,setRecipeList,setSignupModalVisible,setLoginModalVisible) {
   try {
       await Auth.signOut({ global: true })
       .then(()=>{setSignedIn(false);setFoodList([]);setRecipeList([]);setSignupModalVisible(false);setLoginModalVisible(false)});

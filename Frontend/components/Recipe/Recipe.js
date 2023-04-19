@@ -1,10 +1,9 @@
 import { Modal, Animated, Text, View, Alert, FlatList, SafeAreaView, TouchableOpacity,} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
-import { styles } from '../styles';
-import { getRecipe } from './getRecipe';
-import RecipeModal from './RecipeModal';
-import store from './store';
+import { styles } from '../../styles';
+import { getRecipe } from '../getRecipe';
+import store from '../store';
 import Item from './RecipeItem';
 import { updateErrorCheck } from './RecipeErrorCheck';
 import { AntDesign } from '@expo/vector-icons';
@@ -13,9 +12,6 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
 
 export default function Recipe({navigation}) {
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [RecipeModalVisible,setRecipeModalVisible] = useState(false);
-
   const [recipeList,setRecipeList] = store.useState("recipeList");
   const [isRecommend,setIsRecommend] = store.useState("isRecommend");
 

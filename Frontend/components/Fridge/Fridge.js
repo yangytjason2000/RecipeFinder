@@ -1,12 +1,12 @@
 import { Modal, Animated, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { styles } from '../styles';
+import { styles } from '../../styles';
 import FoodModal from './FoodModal';
 import { Auth } from 'aws-amplify';
 import { updateErrorCheck } from './FridgeErrorCheck';
 import { Swipeable } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
-import store from './store';
+import store from '../store';
 import Item from './FoodItem';
 import { SearchBar } from 'react-native-elements';
 export default function Fridge({navigation}) {

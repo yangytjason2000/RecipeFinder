@@ -2,7 +2,7 @@ import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, Touchable
 import { useState,useRef,useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
-import { styles } from '../styles';
+import { styles } from '../../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { updateErrorCheck } from './FridgeErrorCheck';
 

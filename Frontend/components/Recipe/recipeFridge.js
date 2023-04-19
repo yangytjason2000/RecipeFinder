@@ -1,8 +1,8 @@
 import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, ScrollView, ImageBackground} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { styles } from '../styles';
-import FoodModal from './FoodModal';
-import Item from './FoodItem';
+import { styles } from '../../styles';
+import FoodModal from '../Fridge/FoodModal';
+import Item from '../Fridge/FoodItem';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { AntDesign } from '@expo/vector-icons';
 export default function RecipeFridge({foodList,setFoodList}) {

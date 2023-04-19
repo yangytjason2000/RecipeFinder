@@ -1,6 +1,6 @@
 import {Text,} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { styles } from '../styles';
+import { styles } from '../../styles';
 const Item = ({recipe,navigateToRecipe}) => {
     function setSelected(){
         navigateToRecipe(recipe);
