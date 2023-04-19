@@ -4,7 +4,7 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
 import RecipeFridge from './recipeFridge';
 import ConfirmModal from './confirm';
-import { getRecipe } from './getRecipe';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { updateErrorCheck } from './RecipeErrorCheck';
 import store from './store';
 export default function RecipeModal({route,navigation}) {
@@ -49,10 +49,7 @@ export default function RecipeModal({route,navigation}) {
         
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
         setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed} consumeConfirm={consumeConfirm}/>
-        <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, alignItems: 'center', }}
-        >
+
         {(!isEditingMethod && !isAdd) &&
           <TouchableOpacity onPress={()=>setIsEditingMethod(!isEditingMethod)}>
             <Text style={styles.title}>{method}</Text> 
@@ -61,7 +58,6 @@ export default function RecipeModal({route,navigation}) {
         <Text style={styles.title}>Method</Text>}
         {(isEditingMethod || isAdd) &&
         <TextInput style={styles.method} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
-        </KeyboardAvoidingView>
 
         {(!isAdd && !isConfirmed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}

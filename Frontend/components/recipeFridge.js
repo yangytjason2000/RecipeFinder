@@ -3,6 +3,7 @@ import { useState,useRef,useEffect } from 'react';
 import { styles } from '../styles';
 import FoodModal from './FoodModal';
 import Item from './FoodItem';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { AntDesign } from '@expo/vector-icons';
 export default function RecipeFridge({foodList,setFoodList}) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,7 +24,7 @@ export default function RecipeFridge({foodList,setFoodList}) {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-      <FlatList
+      <KeyboardAwareFlatList
         data={foodList}
         renderItem={({item}) => <Item food={item} setName={setSelectedName} setEmoji={setSelectedEmoji} 
         setNumber={setSelectedNumber} setUnit={setSelectedUnit} setDate={setSelectedDate} 
