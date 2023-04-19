@@ -4,26 +4,22 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
 import RecipeFridge from './recipeFridge';
 import ConfirmModal from '../confirm';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { updateErrorCheck } from './RecipeErrorCheck';
 import store from '../store';
 export default function RecipeModal({route,navigation}) {
   const [isEditingName,setIsEditingName] = useState(false);
-  const [isEditingMethod,setIsEditingMethod] = useState(false);
   const [confirmModalVisible,setConfirmModalVisible] = useState(false);
   const [isConfirmed,setIsConfirmed] = useState(false);
   const [confirmedPressed,setConfirmedPressed] = useState(false);
   const {initName,initIngredient,initMethod,isAdd} = route.params;
   const [name,setName] = useState(initName);
   const [ingredient,setIngredient] = useState(initIngredient);
-  const [method,setMethod] = useState(initMethod);
   
   const [foodList, setFoodList] = store.useState("foodList");
   const [recipeList,setRecipeList] = store.useState("recipeList");
 
   function restore(){
     setIsEditingName(false);
-    setIsEditingMethod(false);
     setConfirmModalVisible(false);
     setIsConfirmed(false);
     setConfirmedPressed(false);
@@ -50,15 +46,6 @@ export default function RecipeModal({route,navigation}) {
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
         setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed} consumeConfirm={consumeConfirm}/>
 
-        {(!isEditingMethod && !isAdd) &&
-          <TouchableOpacity onPress={()=>setIsEditingMethod(!isEditingMethod)}>
-            <Text style={styles.title}>{method}</Text> 
-          </TouchableOpacity>}
-        {(isAdd) &&
-        <Text style={styles.title}>Method</Text>}
-        {(isEditingMethod || isAdd) &&
-        <TextInput style={styles.method} onChangeText={setMethod} value={method} placeholder={method} multiline={true}/>}
-
         {(!isAdd && !isConfirmed) && <TouchableOpacity
           style={[styles.button, styles.buttonConsume]}
           onPress={() => setConfirmModalVisible(true)}>
@@ -67,53 +54,14 @@ export default function RecipeModal({route,navigation}) {
 
         {confirmedPressed && 
           <Text style={styles.confirm}>Confirmed Eat This!</Text>}
-
-        {!isAdd && <TouchableOpacity
+        <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
-          <Text style={styles.textStyle}>Update Recipe</Text>
-        </TouchableOpacity>}
-        {isAdd && <TouchableOpacity
-          style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
-          <Text style={styles.textStyle}>Add Recipe</Text>
-        </TouchableOpacity>}
+          onPress={()=>navigation.navigate('Method',{name:name,ingredient:ingredient,initMethod:initMethod,isAdd:isAdd})}>
+          <Text style={styles.textStyle}>Modify Method</Text>
+        </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
   );
-}
-async function addRecipe(name,ingredient,method,setRecipeList){
-  const message={
-    "name": name,
-    "ingredient": ingredient,
-    "method": method,
-    "date": new Date(),
-  }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipes?database=recipe&mode=single',{
-    method: "POST",
-    body: JSON.stringify(message),
-    headers: {
-      Authorization: `Bearer ${(await Auth.currentSession())
-        .getIdToken()
-        .getJwtToken()}`
-    }
-  })
-  .then(response => {
-    if (response.ok){
-      response.json().then(response=>{
-        setRecipeList(response);
-      })
-    }
-    else{
-      response.json().then(error=>{
-        Alert.alert('Error',error.message,[{text: 'OK'}]);
-
-      })
-    }
-  })
-  .catch(error => {
-    Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
-  });
 }
 async function consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeMethod){
   try {
