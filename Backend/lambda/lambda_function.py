@@ -45,19 +45,42 @@ def get_username(event):
     username = decoded_token['cognito:username']
     return username
 
+def check_availibility(fridge,ingredients):
+    for ingredient in ingredients:
+        if ingredient['name'] in fridge and ingredient['quantity']>fridge[ingredient['name']]:
+            return False
+        elif ingredient['name'] not in fridge:
+            return False
+    return True
+
 def recommend_item(table,username,item_number=1):
     if item_number < 0:
         return serialize_invalid_response('Not a valid number')
-    items = []
+    recipes = []
     response = table.query(KeyConditionExpression=Key('username').eq(username))
-    items.extend(response['Items'])
+    recipes.extend(response['Items'])
     while 'LastEvaluatedKey' in response:
         response = table.query(KeyConditionExpression=Key('username').eq(username),
                             ExclusiveStartKey=response['LastEvaluatedKey'])
-        items.extend(response['Items'])
-    if (len(items)>=item_number):
-        items = sorted(items,key = lambda x: x['date'])[:item_number]
-    return serialize_correct_response(items)
+        recipes.extend(response['Items'])
+    dynamodb = boto3.resource('dynamodb')
+    fridge_table = dynamodb.Table('ingredient')
+    fridge = {}
+    response = fridge_table.query(KeyConditionExpression=Key('username').eq(username))
+    for item in response['Items']:
+        fridge[item['name']] = item['quantity']
+    while 'LastEvaluatedKey' in response:
+        response = fridge_table.query(KeyConditionExpression=Key('username').eq(username),
+                            ExclusiveStartKey=response['LastEvaluatedKey'])
+        for item in response['Items']:
+            fridge[item['name']] = item['quantity']
+    recommend_recipe = []
+    for recipe in recipes:
+        if check_availibility(fridge,recipe['ingredient']):
+            recommend_recipe.append(recipe)
+    if (len(recommend_recipe)>=item_number):
+        recommend_recipe = sorted(recommend_recipe,key = lambda x: x['date'])[:item_number]
+    return serialize_correct_response(recommend_recipe)
 
 
 def get_item(table,username):

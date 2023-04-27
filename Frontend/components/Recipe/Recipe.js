@@ -80,7 +80,8 @@ export default function Recipe({navigation}) {
       />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity  onPress={()=>navigation.navigate('Modify Recipe',{name:'',ingredient:[],method:'',isAdd:true})} 
+        <TouchableOpacity  
+        onPress={()=>navigation.navigate('Modify Recipe',{initName:'',initIngredient:[],initMethod:'',isAdd:true})} 
         style={styles.iosbutton}>
           <AntDesign name="pluscircleo" size={24} color="#007AFF" />
           <Text style={styles.addTextStyle}> New Recipe</Text>
