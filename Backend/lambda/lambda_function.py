@@ -5,7 +5,7 @@ import jwt
 import re
 import openai
 
-openai.api_key = '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'
+openai.api_key = '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'
 METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
 ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
