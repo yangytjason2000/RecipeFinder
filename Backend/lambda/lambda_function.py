@@ -3,14 +3,12 @@ from boto3.dynamodb.conditions import Key
 import json
 import jwt
 import re
+import openai
 
+openai.api_key = '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'
 METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
 ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
-
-class consumeError(Exception):
-    def __init__(self, message):
-        self.message = message
 
 def lambda_handler(event, context):
     method = event['httpMethod']
@@ -34,6 +32,19 @@ def lambda_handler(event, context):
             return post_item(table, event['body'],username)
     if method == 'DELETE':
         return delete_item(table, event['body'],username) 
+    
+
+def generate_text(prompt):
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=prompt,
+        max_tokens=2048,
+        n=1,
+        stop=None,
+        temperature=0.7,
+    )
+    text = response.choices[0].text.strip()
+    return text
 
 def get_username(event):
     # Extract the token from the Authorization header
