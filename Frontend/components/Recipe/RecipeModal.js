@@ -14,17 +14,14 @@ export default function RecipeModal({route,navigation}) {
   const {initName,initIngredient,initMethod,isAdd} = route.params;
   const [name,setName] = useState(initName);
   const [ingredient,setIngredient] = useState(initIngredient);
-  
+  useEffect(()=>{
+    if (route.params?.initIngredient){
+      setIngredient(route.params.initIngredient);
+    }
+  },[route.params?.initIngredient])
   const [foodList, setFoodList] = store.useState("foodList");
   const [recipeList,setRecipeList] = store.useState("recipeList");
 
-  function restore(){
-    setIsEditingName(false);
-    setConfirmModalVisible(false);
-    setIsConfirmed(false);
-    setConfirmedPressed(false);
-    navigation.goBack();
-  }
   async function consumeConfirm(){
     await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
     await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);
@@ -41,7 +38,8 @@ export default function RecipeModal({route,navigation}) {
         {(isEditingName || isAdd) &&
         <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
         <Text style={styles.title}>Ingredients</Text>
-        <RecipeFridge foodList={ingredient} setFoodList={setIngredient}/>
+
+        <RecipeFridge ingredientList={ingredient} navigation={navigation}/>
         
         <ConfirmModal prompt="Are you sure you want to eat this?" modalVisible={confirmModalVisible}
         setModalVisible={setConfirmModalVisible} setIsConfirmed={setIsConfirmed} consumeConfirm={consumeConfirm}/>

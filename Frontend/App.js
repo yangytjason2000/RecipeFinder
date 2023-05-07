@@ -4,6 +4,7 @@ import Fridge from './components/Fridge/Fridge.js';
 import Recipe from './components/Recipe/Recipe.js';
 import RecipeModal from './components/Recipe/RecipeModal.js';
 import MethodModal from './components/Recipe/MethodModal.js';
+import AddIngredient from './components/Recipe/AddIngredient.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
         <Stack.Screen name="Recipe" component={Recipe} />
         <Stack.Screen name="Modify Recipe" component={RecipeModal}/>
         <Stack.Screen name="Method" component={MethodModal}/>
+        <Stack.Screen name="AddIngredient" component={AddIngredient}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

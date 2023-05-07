@@ -2,44 +2,24 @@ import { Modal, StyleSheet, Text, View, Button, FlatList, SafeAreaView, Touchabl
 import { useState,useRef,useEffect } from 'react';
 import { styles } from '../../styles';
 import FoodModal from '../Fridge/FoodModal';
-import Item from '../Fridge/FoodItem';
+import Item from './IngredientItem';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { AntDesign } from '@expo/vector-icons';
-export default function RecipeFridge({foodList,setFoodList}) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [foodModalVisible,setFoodModalVisible] = useState(false);
-
-  //name,emoji,number
-  const [name,setName] = useState('');
-  const [emoji,setEmoji] = useState('');
-  const [number,setNumber] = useState('');
-  const [unit,setUnit] = useState('');
-  const [date,setDate] = useState(new Date());
-
-  const [selectedName,setSelectedName] = useState('');
-  const [selectedEmoji,setSelectedEmoji] = useState('');
-  const [selectedNumber,setSelectedNumber] = useState('');
-  const [selectedUnit,setSelectedUnit] = useState('');
-  const [selectedDate,setSelectedDate] = useState(new Date());
+export default function RecipeFridge({ingredientList,navigation}) {
+  async function navigateToAdd(name,number,unit,emoji,isAdd){
+    navigation.navigate('AddIngredient',
+    {initName:name,initNumber:number,initUnit:unit,initEmoji:emoji,isAdd:isAdd,ingredientList:ingredientList});
+  }
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
       <KeyboardAwareFlatList
-        data={foodList}
-        renderItem={({item}) => <Item food={item} setName={setSelectedName} setEmoji={setSelectedEmoji} 
-        setNumber={setSelectedNumber} setUnit={setSelectedUnit} setDate={setSelectedDate} 
-        setFoodModalVisible={setFoodModalVisible} isRecipe={true}/>}
+        data={ingredientList}
+        renderItem={({item}) => <Item food={item}
+        navigateToAdd={navigateToAdd}/>}
       />
       </SafeAreaView>
-      <FoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
-      name={name} emoji={emoji} number={number} unit={unit} date={date} foodList={foodList}
-      setName={setName} setEmoji={setEmoji} setNumber={setNumber} setUnit={setUnit}
-      setDate={setDate} setFoodList={setFoodList} isRecipe={true}/>
-      <FoodModal modalVisible={foodModalVisible} setModalVisible={setFoodModalVisible} 
-      name={selectedName} emoji={selectedEmoji} number={selectedNumber} unit={selectedUnit} date={selectedDate} foodList={foodList}
-      setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setUnit={setSelectedUnit}
-      setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={true}/>
-      <TouchableOpacity  onPress={()=>setModalVisible(true)} style={styles.iosbutton}>
+      <TouchableOpacity  onPress={async ()=>await navigateToAdd('','','','',true)} style={styles.iosbutton}>
         <AntDesign name="pluscircleo" size={20} color="#007AFF" />
         <Text style={[styles.addTextStyle,styles.recipeAddIngredientTextSize]}> Ingredients</Text>
       </TouchableOpacity>
