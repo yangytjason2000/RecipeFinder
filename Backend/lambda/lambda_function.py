@@ -3,36 +3,48 @@ from boto3.dynamodb.conditions import Key
 import json
 import jwt
 import re
+import openai
 
+openai.api_key = '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'
 METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
 ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
-
-class consumeError(Exception):
-    def __init__(self, message):
-        self.message = message
 
 def lambda_handler(event, context):
     method = event['httpMethod']
     if method not in METHODS:
         return serialize_invalid_response(f'Unsupported HTTP method: {method}')
-    table_name = event['path'][1:].split('/')[0]
+    table_name = event['queryStringParameters']['database']
     if table_name not in TABLES:
         return serialize_invalid_response(f'Invalid resource name: {table_name}')
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
     username = get_username(event)
     if method == 'GET':
-        if len(event['path'][1:].split('/'))>1:
+        if event['queryStringParameters']['mode']=='recommend':
             return recommend_item(table,username)
-        return get_item(table,username)
+        else:
+            return get_item(table,username)
     if method == 'POST':
-        if len(event['path'][1:].split('/'))>1:
+        if event['queryStringParameters']['mode']=='consume':
             return consume_item(table, event['body'],username)
         else:
             return post_item(table, event['body'],username)
     if method == 'DELETE':
         return delete_item(table, event['body'],username) 
+    
+
+def generate_text(prompt):
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=prompt,
+        max_tokens=2048,
+        n=1,
+        stop=None,
+        temperature=0.7,
+    )
+    text = response.choices[0].text.strip()
+    return text
 
 def get_username(event):
     # Extract the token from the Authorization header
@@ -44,19 +56,42 @@ def get_username(event):
     username = decoded_token['cognito:username']
     return username
 
+def check_availibility(fridge,ingredients):
+    for ingredient in ingredients:
+        if ingredient['name'] in fridge and ingredient['quantity']>fridge[ingredient['name']]:
+            return False
+        elif ingredient['name'] not in fridge:
+            return False
+    return True
+
 def recommend_item(table,username,item_number=1):
     if item_number < 0:
         return serialize_invalid_response('Not a valid number')
-    items = []
+    recipes = []
     response = table.query(KeyConditionExpression=Key('username').eq(username))
-    items.extend(response['Items'])
+    recipes.extend(response['Items'])
     while 'LastEvaluatedKey' in response:
         response = table.query(KeyConditionExpression=Key('username').eq(username),
                             ExclusiveStartKey=response['LastEvaluatedKey'])
-        items.extend(response['Items'])
-    if (len(items)>=item_number):
-        items = sorted(items,key = lambda x: x['date'])[:item_number]
-    return serialize_correct_response(items)
+        recipes.extend(response['Items'])
+    dynamodb = boto3.resource('dynamodb')
+    fridge_table = dynamodb.Table('ingredient')
+    fridge = {}
+    response = fridge_table.query(KeyConditionExpression=Key('username').eq(username))
+    for item in response['Items']:
+        fridge[item['name']] = item['quantity']
+    while 'LastEvaluatedKey' in response:
+        response = fridge_table.query(KeyConditionExpression=Key('username').eq(username),
+                            ExclusiveStartKey=response['LastEvaluatedKey'])
+        for item in response['Items']:
+            fridge[item['name']] = item['quantity']
+    recommend_recipe = []
+    for recipe in recipes:
+        if check_availibility(fridge,recipe['ingredient']):
+            recommend_recipe.append(recipe)
+    if (len(recommend_recipe)>=item_number):
+        recommend_recipe = sorted(recommend_recipe,key = lambda x: x['date'])[:item_number]
+    return serialize_correct_response(recommend_recipe)
 
 
 def get_item(table,username):
@@ -120,6 +155,7 @@ def post_item(table, payload, username):
         for ingredient in ingredients:
             if not is_number(ingredient['quantity']):
                 return serialize_invalid_response('Invalid quantity')
+    item['name'] = item['name'].strip()
     item['username'] = username
     table.put_item(Item=item)
     return get_item(table,username)

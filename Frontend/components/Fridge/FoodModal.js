@@ -1,10 +1,10 @@
 import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, TouchableOpacity, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
-import { FadeInView } from './FadeInView';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
-import { getUsername } from './getUsername';
-import { styles } from '../styles';
+import { styles } from '../../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { updateErrorCheck } from './FridgeErrorCheck';
 
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
 ,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
@@ -26,6 +26,8 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
+        <KeyboardAwareScrollView
+        contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -42,20 +44,27 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
             {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
             {deleteFlag ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> isRecipe ? saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
-                  : addFood(name,number,unit,emoji,date,setFoodList,restore)}>
+                onPress={async ()=> {if (isRecipe) {
+                  saveRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
+                } else {
+                  await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
+                  restore();
+                }}}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> isRecipe ? addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore) 
-              : addFood(name,number,unit,emoji,date,setFoodList,restore)}>
+              onPress={async ()=> {if (isRecipe) {
+                addRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
+              } else {
+                await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
+                restore();
+              }}}>
               <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
-            {deleteFlag && <TouchableOpacity 
+            {(deleteFlag && isRecipe) && <TouchableOpacity 
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> isRecipe ? removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore)
-                : removeFood(name,number,unit,emoji,date,setFoodList,restore)}>
+              onPress={async ()=> removeRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore)}>
               <Text style={styles.textStyle}>Delete</Text>
             </TouchableOpacity>}
             <TouchableOpacity
@@ -66,6 +75,7 @@ export default function FoodModal({modalVisible,setModalVisible,name='',emoji=''
           </View>
         </View>
         </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
         </Modal>
   );
 }
@@ -92,7 +102,7 @@ function removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
   setFoodList(newList);
   restore();
 }
-async function addFood(name,number,unit,emoji,date,setFoodList,restore){
+async function addFood(name,number,unit,emoji,date,setFoodList){
   const message={
     "name": name,
     "emoji": emoji,
@@ -100,7 +110,7 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
     "unit": unit,
     "date": date,
   }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
+  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredients?database=ingredient&mode=single',{
     method: "POST",
     body: JSON.stringify(message),
     headers: {
@@ -113,7 +123,6 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
     if (response.ok){
       response.json().then(response=>{
         setFoodList(response);
-        restore();
       })
     }
     else{
@@ -124,39 +133,5 @@ async function addFood(name,number,unit,emoji,date,setFoodList,restore){
   })
   .catch(error => {
     Alert.alert('Update error',error.message, [{ text: 'Ok' }]);
-  });
-}
-async function removeFood(name,number,unit,emoji,date,setFoodList,restore){
-  const message={
-    "name": name,
-    "emoji": emoji,
-    "quantity": number,
-    "unit": unit,
-    "date": date,
-  }
-  await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredient',{
-    method: "DELETE",
-    body: JSON.stringify(message),
-    headers: {
-      Authorization: `Bearer ${(await Auth.currentSession())
-        .getIdToken()
-        .getJwtToken()}`
-    }
-  })
-  .then(response => {
-    if (response.ok){
-      response.json().then(response=>{
-        setFoodList(response);
-        restore();
-      })
-    }
-    else{
-      response.json().then(error=>{
-        Alert.alert('Error',error.message,[{text: 'OK'}]);
-      })
-    }
-  })
-  .catch(error => {
-    Alert.alert('Remove error',error.message, [{ text: 'Ok' }]);
   });
 }

@@ -1,14 +1,10 @@
-import { StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableHighlight } from 'react-native';
-import { useState, useEffect} from 'react';
 import  Main  from './components/Main.js';
 import Amplify,{ Auth } from '@aws-amplify/core';
-import Fridge from './components/Fridge.js';
-import Recipe from './components/Recipe.js';
-import {useGlobalState} from 'state-pool';
-import store from './components/store.js';
-import { StoreProvider } from 'state-pool';
-import { getFood } from './components/getFood.js';
-import { getRecipe } from './components/getRecipe.js';
+import Fridge from './components/Fridge/Fridge.js';
+import Recipe from './components/Recipe/Recipe.js';
+import RecipeModal from './components/Recipe/RecipeModal.js';
+import MethodModal from './components/Recipe/MethodModal.js';
+import AddIngredient from './components/Recipe/AddIngredient.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 export default function App() {
@@ -31,49 +27,17 @@ export default function App() {
   });
   
   const Stack = createNativeStackNavigator();
-  // const [status,setStatus]=useGlobalState("status");
-  // const [foodList, setFoodList] = useGlobalState("foodList");
-  // const [recipeList,setRecipeList] = useGlobalState("recipeList");
-  // const [signedIn,setSignedIn] = useGlobalState("signedIn");
-  // const [isRecommend,setIsRecommend] = useGlobalState("isRecommend");
 
-
-  // const [status,setStatus]=useState(0);
-  // const [foodList, setFoodList] = useState([]);
-  // const [recipeList,setRecipeList] = useState([]);
-  // const [signedIn,setSignedIn] = useState(false);
-  // const [isRecommend,setIsRecommend] = useState(false);
-
-
-  // useEffect(()=>{
-  //   const confirmSignedIn = async() => {
-  //     try {
-  //       await Auth.currentAuthenticatedUser()
-  //       .then(()=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
-  //     } catch {
-  //       setSignedIn(false);
-  //     }
-  //   }
-  //   confirmSignedIn();
-  //   },[])
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="RecipeFinder">
         <Stack.Screen name="RecipeFinder" component={Main} />
         <Stack.Screen name="Fridge" component={Fridge} />
         <Stack.Screen name="Recipe" component={Recipe} />
+        <Stack.Screen name="Modify Recipe" component={RecipeModal}/>
+        <Stack.Screen name="Method" component={MethodModal}/>
+        <Stack.Screen name="AddIngredient" component={AddIngredient}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
-  // if (status==0){
-  //   return (<Main setStatus={setStatus} setFoodList={setFoodList} setRecipeList={setRecipeList}
-  //     signedIn={signedIn} setSignedIn={setSignedIn}/>);
-  // }
-  // else if (status==1){
-  //   return (<Fridge setStatus={setStatus} foodList={foodList} setFoodList={setFoodList}/>);
-  // }
-  // else if (status==2){
-  //   return (<Recipe setStatus={setStatus} recipeList={recipeList} setRecipeList={setRecipeList}
-  //   isRecommend={isRecommend} setIsRecommend={setIsRecommend} setFoodList={setFoodList}/>);
-  // }
 }

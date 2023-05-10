@@ -1,7 +1,7 @@
-import { Modal, StyleSheet, Text, View, Button, ImageBackground, Pressable, TouchableOpacity, Alert, TextInput} from 'react-native';
+import { Modal, Text, View, Keyboard,TouchableOpacity, Alert, TextInput,TouchableWithoutFeedback} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
-import { FadeInView } from './FadeInView';
 import { getFood } from './getFood';
 import { getRecipe } from './getRecipe';
 import { styles } from '../styles';
@@ -22,6 +22,9 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
+        <KeyboardAwareScrollView
+        contentContainerStyle={{flex:1}}>
+        <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text>Username</Text>
@@ -59,13 +62,14 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             </TouchableOpacity>
           </View>
         </View>
+        </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
         </Modal>
   );
 }
 async function confirm(username,confirmation,setSignedIn) {
   await Auth.confirmSignUp(username, confirmation)
   .then(data => {
-    console.log(data);
     setSignedIn(true);
   })
   .catch(error => {
