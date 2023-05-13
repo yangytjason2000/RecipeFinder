@@ -4,8 +4,9 @@ import json
 import jwt
 import re
 import openai
+import os
 
-openai.api_key = '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'
+openai.api_key = os.getenv("OPENAI_API_KEY")
 METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
 ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
@@ -33,14 +34,10 @@ def lambda_handler(event, context):
     if method == 'DELETE':
         return delete_item(table, event['body'],username) 
     
-
 def generate_text(prompt):
     response = openai.Completion.create(
-        engine="davinci",
+        model = "text-davinci-003",
         prompt=prompt,
-        max_tokens=2048,
-        n=1,
-        stop=None,
         temperature=0.7,
     )
     text = response.choices[0].text.strip()
