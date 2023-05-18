@@ -10,6 +10,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 METHODS = set(['GET', 'POST', 'DELETE'])
 TABLES = set(['ingredient','recipe'])
 ISO8601 = r'^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})Z$'
+print("test1")
 
 def lambda_handler(event, context):
     method = event['httpMethod']
