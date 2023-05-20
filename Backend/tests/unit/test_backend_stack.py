@@ -10,6 +10,6 @@ def test_sqs_queue_created():
     stack = BackendStack(app, "backend")
     template = assertions.Template.from_stack(stack)
 
-#     template.has_resource_properties("AWS::SQS::Queue", {
-#         "VisibilityTimeout": 300
-#     })
+    template.has_resource_properties("AWS::SQS::Queue", {
+        "VisibilityTimeout": 300
+    })
