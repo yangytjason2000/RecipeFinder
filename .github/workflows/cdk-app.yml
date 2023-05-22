@@ -33,7 +33,7 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2.1.4
         with:
           cdk_subcommand: 'bootstrap'
-          cdk_stack: ''
+          cdk_stack: aws://$${ AWS_ACCOUNT_ID }/us-west-1
           working_dir: 'Backend'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
