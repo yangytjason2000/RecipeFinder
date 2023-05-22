@@ -1,0 +1,36 @@
+on: [push]
+
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: cdk synth
+        uses: youyo/aws-cdk-github-actions@v2.1.4
+        with:
+          cdk_subcommand: 'synth'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          AWS_DEFAULT_REGION: 'us-west-1'
+
+      - name: cdk bootstrap
+        uses: youyo/aws-cdk-github-actions@v2.1.4
+        with:
+          cdk_subcommand: 'bootstrap'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          AWS_DEFAULT_REGION: 'us-west-1'
+
+      - name: cdk deploy
+        uses: youyo/aws-cdk-github-actions@v2.1.4
+        with:
+          cdk_subcommand: 'deploy'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          AWS_DEFAULT_REGION: 'us-west-1'    
