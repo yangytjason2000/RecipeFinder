@@ -8,7 +8,11 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     steps:
-
+      - name: set Workspace
+        uses: actions/checkout@v2
+        with:
+          repository: ''
+          
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2.1.4
         with:
