@@ -24,11 +24,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
           AWS_DEFAULT_REGION: 'us-west-1'
 
+      - name: Get AWS Account ID
+        id: get_account_id
+        run: |
+          echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> $GITHUB_ENV
+      
       - name: cdk bootstrap
-        uses: youyo/aws-cdk-github-actions@v2
+        uses: youyo/aws-cdk-github-actions@v2.1.4
         with:
           cdk_subcommand: 'bootstrap'
-          cdk_stack: 'aws://<account id>/<region>'
+          cdk_stack: 'aws://$AWS_ACCOUNT_ID/us-west-1'
           working_dir: 'Backend'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
