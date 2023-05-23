@@ -7,6 +7,7 @@ import MethodModal from './components/Recipe/MethodModal.js';
 import AddIngredient from './components/Recipe/AddIngredient.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 export default function App() {
   Amplify.configure({
     Auth: {
@@ -27,17 +28,22 @@ export default function App() {
   });
   
   const Stack = createNativeStackNavigator();
-
+  const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="RecipeFinder">
+      {/* <Stack.Navigator initialRouteName="RecipeFinder">
         <Stack.Screen name="RecipeFinder" component={Main} />
         <Stack.Screen name="Fridge" component={Fridge} />
         <Stack.Screen name="Recipe" component={Recipe} />
         <Stack.Screen name="Modify Recipe" component={RecipeModal}/>
         <Stack.Screen name="Method" component={MethodModal}/>
         <Stack.Screen name="AddIngredient" component={AddIngredient}/>
-      </Stack.Navigator>
+      </Stack.Navigator> */}
+      <Tab.Navigator>
+        <Tab.Screen name="RecipeFinder" component={Main}/>
+        <Tab.Screen name="Fridge" component={Fridge} />
+        <Tab.Screen name="Recipe" component={Recipe} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
