@@ -1,6 +1,4 @@
 import  Main  from './components/Main.js';
-// import { IconButton } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import Amplify,{ Auth } from '@aws-amplify/core';
 import Fridge from './components/Fridge/Fridge.js';
 import Recipe from './components/Recipe/Recipe.js';
@@ -32,36 +30,10 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
 
-  // Custom IconButton component
-  const IconButton = ({ onPress, iconName, iconSize, iconColor }) => {
-    return (
-      <Ionicons.Button
-        name={iconName}
-        onPress={onPress}
-        size={iconSize}
-        color={iconColor}
-        backgroundColor="transparent"
-      />
-    );
-  };
-
   function Recipe_page(){
     return (
     <Stack.Navigator initialRouteName="Recipe">
-      <Stack.Screen name="Recipe" component={Recipe} options={{
-          headerTitle: 'Recipe',
-          headerRight: () => (
-            <IconButton
-              onPress={() => {
-                // Handle button press
-                // navigation.navigate('Modify Recipe',{initName:'',initIngredient:[],initMethod:'',isAdd:true})
-              }}
-              iconName="ios-add" // Specify the icon name from Ionicons
-              iconSize={30}
-              iconColor="#000"
-            />
-          ),
-        }}/>
+      <Stack.Screen name="Recipe" component={Recipe}/>
       <Stack.Screen name="Modify Recipe" component={RecipeModal} />
       <Stack.Screen name="Method" component={MethodModal} />
       <Stack.Screen name="AddIngredient" component={AddIngredient} />
