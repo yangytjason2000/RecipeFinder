@@ -33,10 +33,16 @@ export default function App() {
   function Recipe_page(){
     return (
     <Stack.Navigator initialRouteName="Recipe">
-      <Stack.Screen name="Recipe" component={Recipe}/>
-      <Stack.Screen name="Modify Recipe" component={RecipeModal} />
-      <Stack.Screen name="Method" component={MethodModal} />
-      <Stack.Screen name="AddIngredient" component={AddIngredient} />
+      <Stack.Screen name="Recipe" component={Recipe} screenOptions={{
+        headerStyle: {
+          borderBottomWidth: 0, // Hide the line between header and main component
+        },
+      }}/>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="Modify Recipe" component={RecipeModal}/>
+        <Stack.Screen name="Method" component={MethodModal}/>
+        <Stack.Screen name="AddIngredient" component={AddIngredient}/>
+      </Stack.Group>
     </Stack.Navigator>
     )
   }
@@ -51,9 +57,13 @@ export default function App() {
         <Stack.Screen name="AddIngredient" component={AddIngredient}/>
       </Stack.Navigator> */}
       <Tab.Navigator>
-        <Tab.Screen name="RecipeFinder" component={Main}/>
-        <Tab.Screen name="Fridge" component={Fridge} />
-        <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false}}/>
+        <Tab.Screen name="RecipeFinder" component={Main} screenOptions={{
+        headerStyle: {
+          borderBottomWidth: 0, // Hide the line between header and main component
+        },
+      }}/>
+      <Tab.Screen name="Fridge" component={Fridge} />
+      <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false}}/>
 
       </Tab.Navigator>
     </NavigationContainer>

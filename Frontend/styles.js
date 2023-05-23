@@ -58,7 +58,7 @@ export  const styles = StyleSheet.create({
       padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
-      borderRadius: 25,
+      borderRadius: 10,
     },
     food: {
       fontSize: 15,

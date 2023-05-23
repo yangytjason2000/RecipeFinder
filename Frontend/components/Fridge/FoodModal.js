@@ -8,7 +8,6 @@ import { updateErrorCheck } from './FridgeErrorCheck';
 
 export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
 ,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
-  const [isLoading,setIsLoading] = useState(false);
   function restore(){
     setModalVisible(false);
     setName('');
