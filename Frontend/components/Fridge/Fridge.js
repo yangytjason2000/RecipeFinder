@@ -39,6 +39,11 @@ export default function Fridge({navigation}) {
     }
   }
 
+  const navigateToFridge= (item) => {
+    navigation.navigate('Modify Food',
+    {initName:item.name, initNumber:item.number, initUnit:item.unit, initEmoji:item.emoji,initDate:item.date,isAdd: false})
+  }
+
   return (
     <View style={styles.fridgeContainer}>
       <SearchBar
@@ -81,22 +86,16 @@ export default function Fridge({navigation}) {
         }
         onSwipeableWillOpen={() => { swipeableRefs.current[item.name].swiping = true;}}
         onSwipeableWillClose={() => { swipeableRefs.current[item.name].swiping = false;}}>
-        <Item food={item} setName={setSelectedName} setEmoji={setSelectedEmoji} 
-        setNumber={setSelectedNumber} setUnit={setSelectedUnit} setDate={setSelectedDate} 
-        setFoodModalVisible={setFoodModalVisible} isRecipe={false}/>
+        <Item food={item} navigateToFridge={navigateToFridge}/>
         </Swipeable>}
       />
       </View>
-      <FoodModal modalVisible={modalVisible} setModalVisible={setModalVisible} 
-      name={name} emoji={emoji} number={number} unit={unit} date={date} foodList={foodList}
-      setName={setName} setEmoji={setEmoji} setNumber={setNumber} setUnit={setUnit}
-      setDate={setDate} setFoodList={setFoodList} isRecipe={false}/>
-      <FoodModal modalVisible={foodModalVisible} setModalVisible={setFoodModalVisible} 
-      name={selectedName} emoji={selectedEmoji} number={selectedNumber} unit={selectedUnit} date={selectedDate} foodList={foodList}
-      setName={setSelectedName} setEmoji={setSelectedEmoji} setNumber={setSelectedNumber} setUnit={setSelectedUnit}
-      setDate={setSelectedDate} setFoodList={setFoodList} deleteFlag={true} isRecipe={false}/>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity  onPress={()=>setModalVisible(true)} style={styles.iosbutton}>
+        <TouchableOpacity  onPress=
+          {()=>
+            navigation.navigate('Modify Food',
+            {initName:'',initNumber:'',initUnit:'',initEmoji:'',initDate:(new Date()).toISOString(),isAdd:true})} 
+          style={styles.iosbutton}>
           <AntDesign name="pluscircleo" size={24} color="#007AFF" />
           <Text style={styles.addTextStyle}> New Food</Text>
         </TouchableOpacity>

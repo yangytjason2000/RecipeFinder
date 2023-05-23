@@ -5,102 +5,56 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { updateErrorCheck } from './FridgeErrorCheck';
+import store from '../store';
 
-export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
-,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
-  function restore(){
-    setModalVisible(false);
-    setName('');
-    setNumber('');
-    setUnit('');
-    setEmoji('');
-    setDate(new Date());
-  }
+export default function FoodModal({route,navigation}) {
+  const {initName,initNumber,initUnit,initEmoji,initDate,isAdd} = route.params;
+  const [name,setName] = useState(initName);
+  const [number,setNumber] = useState(initNumber);
+  const [unit,setUnit] = useState(initUnit);
+  const [emoji,setEmoji] = useState(initEmoji);
+  const [date,setDate] = useState(new Date(initDate));
+  const [foodList,setFoodList] = store.useState("foodList");
+
+
   return (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
         <KeyboardAwareScrollView
         contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {!deleteFlag && <Text style={styles.title}>name</Text>}
-            {!deleteFlag && <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
-            {deleteFlag && <Text style={styles.nameTitle}>{name+'\n'}</Text>}
+            {isAdd && <Text style={styles.title}>name</Text>}
+            {isAdd && <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
+            {!isAdd && <Text style={styles.nameTitle}>{name+'\n'}</Text>}
             <Text style={styles.title}>number</Text> 
             <TextInput style={styles.input} onChangeText={setNumber} value={number} placeholder={number}/>
             <Text style={styles.title}>unit</Text> 
             <TextInput style={styles.input} onChangeText={setUnit} value={unit} placeholder={unit}/>
             <Text style={styles.title}>emoji</Text>
             <TextInput style={styles.input} onChangeText={setEmoji} value={emoji} placeholder={emoji}/>
-            {!isRecipe && <Text style={styles.title}>expiration date</Text>}
-            {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
-            {deleteFlag ?<TouchableOpacity
+            <Text style={styles.title}>expiration date</Text>
+            <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />
+            {!isAdd ?<TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={async ()=> {if (isRecipe) {
-                  saveRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
-                } else {
+                onPress={async ()=> {
                   await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
-                  restore();
-                }}}>
+                  navigation.goBack();
+                }}>
                 <Text style={styles.textStyle}>Save</Text>
               </TouchableOpacity> :
               <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={async ()=> {if (isRecipe) {
-                addRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
-              } else {
+              onPress={async ()=> {
                 await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
-                restore();
-              }}}>
-              <Text style={styles.textStyle}>Add</Text>
-              </TouchableOpacity>}
-            {(deleteFlag && isRecipe) && <TouchableOpacity 
-              style={[styles.button,styles.buttonClose]}
-              onPress={async ()=> removeRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore)}>
-              <Text style={styles.textStyle}>Delete</Text>
+                navigation.goBack();
+              }}>
+                <Text style={styles.textStyle}>Add</Text>
             </TouchableOpacity>}
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => restore()}>
-              <Text style={styles.textStyle}>Back</Text>
-            </TouchableOpacity>
-          </View>
         </View>
         </TouchableWithoutFeedback>
         </KeyboardAwareScrollView>
-        </Modal>
   );
 }
-function addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
-  const newList = foodList.concat({ name:name, quantity:number, unit:unit, emoji:emoji });
-  setFoodList(newList);
-  restore();
-}
-function saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
-  for (var i=0;i<foodList.length;i++){
-    if (foodList[i]['name']==name) {
-      const newList = foodList.map(item => ({ ...item }));
-      newList[i]['quantity']=number;
-      newList[i]['unit']=unit;
-      newList[i]['emoji']=emoji;
-      setFoodList(newList);
-      restore();
-      return;
-    }
-  }
-}
-function removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
-  const newList = foodList.filter((item) => item.name!=name);
-  setFoodList(newList);
-  restore();
-}
+
 async function addFood(name,number,unit,emoji,date,setFoodList){
   const message={
     "name": name,
