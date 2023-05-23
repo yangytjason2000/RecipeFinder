@@ -29,6 +29,16 @@ export default function App() {
   
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  function Recipe_page(){
+    return (
+    <Stack.Navigator initialRouteName="Recipe">
+      <Stack.Screen name="Recipe" component={Recipe} />
+      <Stack.Screen name="Modify Recipe" component={RecipeModal} />
+      <Stack.Screen name="Method" component={MethodModal} />
+      <Stack.Screen name="AddIngredient" component={AddIngredient} />
+    </Stack.Navigator>
+    )
+  }
   return (
     <NavigationContainer>
       {/* <Stack.Navigator initialRouteName="RecipeFinder">
@@ -42,7 +52,8 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen name="RecipeFinder" component={Main}/>
         <Tab.Screen name="Fridge" component={Fridge} />
-        <Tab.Screen name="Recipe" component={Recipe} />
+        <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false}}/>
+
       </Tab.Navigator>
     </NavigationContainer>
   );
