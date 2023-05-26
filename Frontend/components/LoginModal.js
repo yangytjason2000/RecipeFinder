@@ -1,32 +1,26 @@
-import { Modal, Text, View, Keyboard,TouchableOpacity, Alert, TextInput,TouchableWithoutFeedback} from 'react-native';
+import {Text, View, Keyboard,TouchableOpacity, Alert, TextInput,TouchableWithoutFeedback} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
 import { getFood } from './getFood';
 import { getRecipe } from './getRecipe';
 import { styles } from '../styles';
-
-export default function LoginModal({modalVisible,setModalVisible,setSignupModalVisible,
-  setFoodList,setRecipeList,setSignedIn,loginFlag=true}) {
+import store from './store';
+export default function LoginModal({navigation}) {
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
     const [useremail,setUserEmail] = useState('');
     const [emailsent,setEmailSent] = useState(false);
     const [confirmation,setConfirmation] = useState('');
+    const [loginFlag,setLoginFlag] = useState(true);
+    const [foodList, setFoodList] = store.useState("foodList");
+    const [recipeList,setRecipeList] = store.useState("recipeList");
+    const [signedIn,setSignedIn] = store.useState("signedIn");
     return (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
         <KeyboardAwareScrollView
         contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
             <Text>Username</Text>
             <TextInput style={styles.input} onChangeText={setUsername} value={username}/>
             <Text>Password</Text>
@@ -37,34 +31,28 @@ export default function LoginModal({modalVisible,setModalVisible,setSignupModalV
             {(!loginFlag && emailsent) && <TextInput style={styles.input} onChangeText={setConfirmation} value={confirmation}/>}
             {loginFlag && <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={()=> signIn(username,password,setSignedIn,setFoodList,setRecipeList,setModalVisible)}>
-                <Text style={styles.textStyle}>Login</Text>
+                onPress={async ()=> {await signIn(username,password,setSignedIn,setFoodList,setRecipeList);
+                navigation.goBack();}}>
+                <Text style={styles.textStyle}>Sign In</Text>
             </TouchableOpacity>}
             {loginFlag && <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
-              onPress={()=> {setModalVisible(false);setSignupModalVisible(true);}}>
+              onPress={()=> {setLoginFlag(false)}}>
               <Text style={styles.textStyle}>Sign Up</Text>
             </TouchableOpacity>}
             {(!loginFlag && !emailsent) && <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
               onPress={()=> signUp(username,password,useremail,setEmailSent)}>
-              <Text style={styles.textStyle}>Sign Up</Text>
+              <Text style={styles.textStyle}>Sent Email</Text>
             </TouchableOpacity>}
             {(!loginFlag && emailsent) && <TouchableOpacity
               style={[styles.button,styles.buttonClose]}
               onPress={()=> confirm(username,confirmation,setSignedIn)}>
               <Text style={styles.textStyle}>Confirm</Text>
             </TouchableOpacity>}
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Back</Text>
-            </TouchableOpacity>
-          </View>
         </View>
         </TouchableWithoutFeedback>
         </KeyboardAwareScrollView>
-        </Modal>
   );
 }
 async function confirm(username,confirmation,setSignedIn) {
@@ -93,13 +81,13 @@ async function signUp(username,password,email,setEmailSent) {
     Alert.alert('Sign up error',error.message, [{ text: 'Ok' }]);
   }
 }
-async function signIn(username,password,setSignedIn,setFoodList,setRecipeList,setModalVisible) {
+async function signIn(username,password,setSignedIn,setFoodList,setRecipeList) {
   try {
       await Auth.signIn({
           username,
           password,
       })
-      .then(response=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);setModalVisible(false)})
+      .then(response=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
   } catch (error) {
     Alert.alert('Login error',error.message, [{ text: 'Ok' }]);
   }

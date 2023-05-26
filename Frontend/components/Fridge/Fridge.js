@@ -32,7 +32,7 @@ export default function Fridge({navigation}) {
   const swipeableRefs = useRef({});
 
   const handleDelete = async (item) => {
-    await updateErrorCheck(item.name,item.number,item.unit,item.emoji,item.date,setFoodList,removeFood);
+    await updateErrorCheck(item.name,item.quantity,item.unit,item.emoji,item.date,setFoodList,removeFood);
     if (swipeableRefs.current[item.name]) {
       swipeableRefs.current[item.name].close();
       delete swipeableRefs.current[item.name];
@@ -41,7 +41,7 @@ export default function Fridge({navigation}) {
 
   const navigateToFridge= (item) => {
     navigation.navigate('Modify Food',
-    {initName:item.name, initNumber:item.number, initUnit:item.unit, initEmoji:item.emoji,initDate:item.date,isAdd: false})
+    {initName:item.name, initNumber:item.quantity, initUnit:item.unit, initEmoji:item.emoji,initDate:item.date,isAdd: false})
   }
 
   return (

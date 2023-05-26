@@ -1,4 +1,5 @@
-import  Main  from './components/Main.js';
+import User_page from './components/User_page.js';
+import LoginModal from './components/LoginModal.js';
 import Amplify,{ Auth } from '@aws-amplify/core';
 import Fridge from './components/Fridge/Fridge.js';
 import FoodModal from './components/Fridge/FoodModal.js';
@@ -9,6 +10,7 @@ import AddIngredient from './components/Recipe/AddIngredient.js';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialIcons } from '@expo/vector-icons';
 export default function App() {
   Amplify.configure({
     Auth: {
@@ -58,21 +60,34 @@ export default function App() {
     </Stack.Navigator>
     )
   }
+  function Me_page(){
+    return (
+      <Stack.Navigator initialRouteName="User_page">
+      <Stack.Screen name="User" component={User_page} />
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="Sign in Page" component={LoginModal}/>
+      </Stack.Group>
+    </Stack.Navigator>
+    )
+  }
   return (
     <NavigationContainer>
-      {/* <Stack.Navigator initialRouteName="RecipeFinder">
-        <Stack.Screen name="RecipeFinder" component={Main} />
-        <Stack.Screen name="Fridge" component={Fridge} />
-        <Stack.Screen name="Recipe" component={Recipe} />
-        <Stack.Screen name="Modify Recipe" component={RecipeModal}/>
-        <Stack.Screen name="Method" component={MethodModal}/>
-        <Stack.Screen name="AddIngredient" component={AddIngredient}/>
-      </Stack.Navigator> */}
       <Tab.Navigator>
-      <Tab.Screen name="RecipeFinder" component={Main} />
-      <Tab.Screen name="Fridge_page" component={Fridge_page} options={{headerShown: false}}/>
-      <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false}}/>
-
+      <Tab.Screen name="Fridge_page" component={Fridge_page} options={{headerShown: false, tabBarLabel: "Fridge",
+          tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="kitchen" size={size} color={color} />
+        ),}}/>
+      <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false, tabBarLabel: "Recipe",
+          tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="menu-book" size={size} color={color} />
+        ),}}/>
+      <Tab.Screen name="Me" component={Me_page}
+      options={{
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="person" size={size} color={color} />
+        ),
+      }} />
       </Tab.Navigator>
     </NavigationContainer>
   );
