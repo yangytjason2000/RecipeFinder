@@ -5,6 +5,7 @@ import { styles } from '../../styles';
 import RecipeFridge from './recipeFridge';
 import ConfirmModal from '../confirm';
 import { updateErrorCheck } from './RecipeErrorCheck';
+import { addRecipe } from './AddRecipe';
 import store from '../store';
 export default function RecipeModal({route,navigation}) {
   const [isEditingName,setIsEditingName] = useState(false);
@@ -14,6 +15,7 @@ export default function RecipeModal({route,navigation}) {
   const {initName,initIngredient,initMethod,isAdd} = route.params;
   const [name,setName] = useState(initName);
   const [ingredient,setIngredient] = useState(initIngredient);
+  const [method,setMethod] = useState(initMethod);
   useEffect(()=>{
     if (route.params?.initIngredient){
       setIngredient(route.params.initIngredient);
