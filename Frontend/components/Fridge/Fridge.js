@@ -10,29 +10,15 @@ import store from '../store';
 import Item from './FoodItem';
 import { SearchBar } from 'react-native-elements';
 export default function Fridge({navigation}) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [foodModalVisible,setFoodModalVisible] = useState(false);
 
   const [foodList, setFoodList] = store.useState("foodList");
-  //name,emoji,number
-  const [name,setName] = useState('');
-  const [emoji,setEmoji] = useState('');
-  const [number,setNumber] = useState('');
-  const [unit,setUnit] = useState('');
-  const [date,setDate] = useState(new Date());
-  
-  const [selectedName,setSelectedName] = useState('');
-  const [selectedEmoji,setSelectedEmoji] = useState('');
-  const [selectedNumber,setSelectedNumber] = useState('');
-  const [selectedUnit,setSelectedUnit] = useState('');
-  const [selectedDate,setSelectedDate] = useState(new Date());
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const swipeableRefs = useRef({});
 
   const handleDelete = async (item) => {
-    await updateErrorCheck(item.name,item.quantity,item.unit,item.emoji,item.date,setFoodList,removeFood);
+    await updateErrorCheck(item,setFoodList,removeFood);
     if (swipeableRefs.current[item.name]) {
       swipeableRefs.current[item.name].close();
       delete swipeableRefs.current[item.name];
@@ -41,7 +27,7 @@ export default function Fridge({navigation}) {
 
   const navigateToFridge= (item) => {
     navigation.navigate('Modify Food',
-    {initName:item.name, initNumber:item.quantity, initUnit:item.unit, initEmoji:item.emoji,initDate:item.date,isAdd: false})
+    {item:item,isAdd: false})
   }
 
   return (
@@ -94,7 +80,7 @@ export default function Fridge({navigation}) {
         <TouchableOpacity  onPress=
           {()=>
             navigation.navigate('Modify Food',
-            {initName:'',initNumber:'',initUnit:'',initEmoji:'',initDate:(new Date()).toISOString(),isAdd:true})} 
+            {item:{name:'',quantity:'',unit:'',emoji:'',date:(new Date()).toISOString()},isAdd:true})} 
           style={styles.iosbutton}>
           <AntDesign name="pluscircleo" size={24} color="#007AFF" />
           <Text style={styles.addTextStyle}> New Food</Text>
@@ -103,13 +89,13 @@ export default function Fridge({navigation}) {
     </View>
   );
 }
-async function removeFood(name,number,unit,emoji,date,setFoodList){
+async function removeFood(item,setFoodList){
   const message={
-    "name": name,
-    "emoji": emoji,
-    "quantity": number,
-    "unit": unit,
-    "date": date,
+    "name": item.name,
+    "emoji": item.emoji,
+    "quantity": item.quantity,
+    "unit": item.unit,
+    "date": item.date,
   }
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredients?database=ingredient',{
     method: "DELETE",
