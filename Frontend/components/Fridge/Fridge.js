@@ -40,6 +40,7 @@ export default function Fridge({navigation}) {
         containerStyle={{ backgroundColor: '#E8E8E8' }}
       />
       <View style={styles.container}>
+      {foodList ?
       <FlatList
         data={foodList ? foodList.filter(item => (item.name.includes(searchQuery) || item.emoji.includes(searchQuery))): []}
         renderItem={({item}) => 
@@ -74,7 +75,7 @@ export default function Fridge({navigation}) {
         onSwipeableWillClose={() => { swipeableRefs.current[item.name].swiping = false;}}>
         <Item food={item} navigateToFridge={navigateToFridge}/>
         </Swipeable>}
-      />
+      /> : (<div>loading...</div>)}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity  onPress=

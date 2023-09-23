@@ -43,6 +43,7 @@ export default function Recipe({navigation}) {
         containerStyle={{ backgroundColor: '#E8E8E8' }}
       />
       <View style={styles.container}>
+      {recipeList ? 
       <FlatList
         data={recipeList ? recipeList.filter(item => item.name.includes(searchQuery)): []}
         renderItem={({item}) => 
@@ -77,7 +78,7 @@ export default function Recipe({navigation}) {
         onSwipeableWillClose={() => {  swipeableRefs.current[item.name].swiping = false; }}>
         <Item recipe={item} navigateToRecipe={navigateToRecipe}/>
         </Swipeable>}
-      />
+      /> : (<div>Loading...</div>)}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity  

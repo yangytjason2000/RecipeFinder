@@ -23,12 +23,12 @@ export default function User_page({navigation}) {
     }
     confirmSignedIn();
     },[])
-  const navigateToFridge= () => {
+  const navigateToSignIn= () => {
     navigation.navigate('Sign in Page');
   }
   return (
     <View style={styles.mainBackground}>  
-      {!signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>navigateToFridge()}>
+      {!signedIn && <TouchableOpacity style={[styles.signInButton,styles.buttonClose]} onPress={()=>navigateToSignIn()}>
         <Text style={styles.textStyle}>Sign in</Text>
       </TouchableOpacity>}
       {signedIn && <TouchableOpacity style={[styles.signInButton,styles.signOutButton]} 

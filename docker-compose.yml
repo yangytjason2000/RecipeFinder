@@ -1,0 +1,11 @@
+version: "3.4"
+
+services:
+  recipe_frontend:
+    restart: unless-stopped
+    container_name: recipe_frontend
+    ports: 
+      - 19000:19000
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile

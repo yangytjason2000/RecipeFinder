@@ -21,8 +21,6 @@ export default function RecipeModal({route,navigation}) {
       setIngredient(route.params.initIngredient);
     }
   },[route.params?.initIngredient])
-  const [foodList, setFoodList] = store.useState("foodList");
-  const [recipeList,setRecipeList] = store.useState("recipeList");
 
   async function consumeConfirm(){
     await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
