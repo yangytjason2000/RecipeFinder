@@ -9,3 +9,5 @@ services:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
+    volumes:
+      - ./Frontend/:/app/
