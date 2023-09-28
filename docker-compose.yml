@@ -10,4 +10,4 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
     volumes:
-      - ./Frontend/:/app/
+      - ./Frontend/:/app/:rw

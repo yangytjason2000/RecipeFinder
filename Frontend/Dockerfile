@@ -8,5 +8,5 @@ WORKDIR /app
 #RUN chmod +x ./scripts/start.sh
 #RUN chmod +x ./scripts/hold.sh
 RUN chmod 777 /root
-RUN chmod 777 /app
+#RUN chmod 777 /app
 CMD ./scripts/start.sh
