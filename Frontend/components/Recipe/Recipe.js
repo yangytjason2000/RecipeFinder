@@ -10,10 +10,13 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
+import { useDispatch,useSelector } from 'react-redux';
+import { changeRecommend } from '../../reducers/recommendReducer';
 
 export default function Recipe({navigation}) {
   const [recipeList,setRecipeList] = store.useState("recipeList");
-  const [isRecommend,setIsRecommend] = store.useState("isRecommend");
+  const isRecommend = useSelector(state => state.recommend.isRecommend);
+  const dispatch = useDispatch();
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -87,13 +90,13 @@ export default function Recipe({navigation}) {
           <Text style={styles.addTextStyle}> New Recipe</Text>
         </TouchableOpacity>
         {!isRecommend && <TouchableOpacity  
-        onPress={async ()=>await recommendErrorCheck(setRecipeList,setIsRecommend,getRecommendRecipe)} 
+        onPress={async ()=>await recommendErrorCheck(setRecipeList,dispatch,getRecommendRecipe)} 
         style={styles.iosbutton}>
           <MaterialCommunityIcons name='thumb-up' size={22} color='green'/>
           <Text style={styles.recommendTextStyle}> Recommend</Text>
         </TouchableOpacity>}
         {isRecommend && <TouchableOpacity 
-        onPress={async ()=>await recommendErrorCheck(setRecipeList,setIsRecommend,getAllRecipe)} 
+        onPress={async ()=>await recommendErrorCheck(setRecipeList,dispatch,getAllRecipe)} 
         style={styles.iosbutton}>
         <Text style={styles.recommendTextStyle}>All Recipes</Text>
         </TouchableOpacity>}
@@ -101,15 +104,15 @@ export default function Recipe({navigation}) {
     </View>
   );
 }
-async function recommendErrorCheck(setRecipeList,setIsRecommend,recommendMethod){
+async function recommendErrorCheck(setRecipeList,dispatch,recommendMethod){
   try {
     await Auth.currentAuthenticatedUser()
-    .then(()=>recommendMethod(setRecipeList,setIsRecommend))
+    .then(()=>recommendMethod(setRecipeList,dispatch))
   } catch (error) {
     Alert.alert('Recommend error',error.message, [{ text: 'Ok' }]);
   }
 }
-async function getRecommendRecipe(setRecipeList,setIsRecommend){
+async function getRecommendRecipe(setRecipeList,dispatch){
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipes?database=recipe&mode=recommend',{
     method: "GET",
     headers: {
@@ -119,15 +122,15 @@ async function getRecommendRecipe(setRecipeList,setIsRecommend){
     }
   })
   .then(response => response.json())
-  .then(response => {setRecipeList(response);setIsRecommend(true)})
+  .then(response => {setRecipeList(response);dispatch(changeRecommend())})
   .catch(error => {
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
   });
 }
 
-async function getAllRecipe(setRecipeList,setIsRecommend){
+async function getAllRecipe(setRecipeList,dispatch){
   await getRecipe(setRecipeList)
-  .then(response => setIsRecommend(false))
+  .then(response => dispatch(changeRecommend()))
   .catch(error => {
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
   });

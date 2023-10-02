@@ -11,6 +11,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Provider } from "react-redux";
+import store from './store.js';
 export default function App() {
   Amplify.configure({
     Auth: {
@@ -71,24 +73,26 @@ export default function App() {
     )
   }
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-      <Tab.Screen name="Fridge_page" component={Fridge_page} options={{headerShown: false, tabBarLabel: "Fridge",
+    <Provider store = {store}>
+      <NavigationContainer>
+        <Tab.Navigator>
+        <Tab.Screen name="Fridge_page" component={Fridge_page} options={{headerShown: false, tabBarLabel: "Fridge",
+            tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="kitchen" size={size} color={color} />
+          ),}}/>
+        <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false, tabBarLabel: "Recipe",
+            tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="menu-book" size={size} color={color} />
+          ),}}/>
+        <Tab.Screen name="Me" component={Me_page}
+        options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="kitchen" size={size} color={color} />
-        ),}}/>
-      <Tab.Screen name="Recipe_page" component={Recipe_page} options={{headerShown: false, tabBarLabel: "Recipe",
-          tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="menu-book" size={size} color={color} />
-        ),}}/>
-      <Tab.Screen name="Me" component={Me_page}
-      options={{
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="person" size={size} color={color} />
-        ),
-      }} />
-      </Tab.Navigator>
-    </NavigationContainer>
+            <MaterialIcons name="person" size={size} color={color} />
+          ),
+        }} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }

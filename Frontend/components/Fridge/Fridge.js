@@ -9,6 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 import store from '../store';
 import Item from './FoodItem';
 import { SearchBar } from 'react-native-elements';
+import { useSelector } from 'react-redux';
 export default function Fridge({navigation}) {
 
   const [foodList, setFoodList] = store.useState("foodList");
