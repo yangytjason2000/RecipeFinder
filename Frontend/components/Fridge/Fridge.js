@@ -9,17 +9,20 @@ import { AntDesign } from '@expo/vector-icons';
 import store from '../store';
 import Item from './FoodItem';
 import { SearchBar } from 'react-native-elements';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeFoodList } from '../../reducers/foodListReducer';
 export default function Fridge({navigation}) {
 
-  const [foodList, setFoodList] = store.useState("foodList");
+  const foodList = useSelector((state) => state.foodList.foodList);
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const swipeableRefs = useRef({});
 
+  const dispatch = useDispatch();
+
   const handleDelete = async (item) => {
-    await updateErrorCheck(item,setFoodList,removeFood);
+    await updateErrorCheck(item,removeFood,dispatch);
     if (swipeableRefs.current[item.name]) {
       swipeableRefs.current[item.name].close();
       delete swipeableRefs.current[item.name];
@@ -73,7 +76,7 @@ export default function Fridge({navigation}) {
         }
         onSwipeableWillOpen={() => { swipeableRefs.current[item.name].swiping = true;}}
         onSwipeableWillClose={() => { swipeableRefs.current[item.name].swiping = false;}}>
-        <Item food={item} navigateToFridge={navigateToFridge}/>
+          <Item food={item} navigateToFridge={navigateToFridge}/>
         </Swipeable>}
       />
       </View>
@@ -90,7 +93,7 @@ export default function Fridge({navigation}) {
     </View>
   );
 }
-async function removeFood(item,setFoodList){
+async function removeFood(item,dispatch){
   const message={
     "name": item.name,
     "emoji": item.emoji,
@@ -110,7 +113,7 @@ async function removeFood(item,setFoodList){
   .then(response => {
     if (response.ok){
       response.json().then(response=>{
-        setFoodList(response);
+        dispatch(changeFoodList(response));
       })
     }
     else{

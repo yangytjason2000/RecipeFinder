@@ -7,6 +7,7 @@ import { getRecipe } from './getRecipe';
 import { styles } from '../styles';
 import { useSignIn } from '../context/signInContext';
 import store from './store';
+import { useDispatch } from 'react-redux';
 export default function LoginModal({navigation}) {
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
@@ -14,11 +15,12 @@ export default function LoginModal({navigation}) {
     const [emailsent,setEmailSent] = useState(false);
     const [confirmation,setConfirmation] = useState('');
     const [loginFlag,setLoginFlag] = useState(true);
-    const [foodList, setFoodList] = store.useState("foodList");
+    // const [foodList, setFoodList] = store.useState("foodList");
     const [recipeList,setRecipeList] = store.useState("recipeList");
     const {signedIn,setSignedIn} = useSignIn();
+    const dispatch = useDispatch();
     return (
-        <KeyboardAwareScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
@@ -32,7 +34,7 @@ export default function LoginModal({navigation}) {
             {(!loginFlag && emailsent) && <TextInput style={styles.input} onChangeText={setConfirmation} value={confirmation}/>}
             {loginFlag && <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={async ()=> {await signIn(username,password,setSignedIn,setFoodList,setRecipeList);
+                onPress={async ()=> {await signIn(username,password,dispatch,setSignedIn,setRecipeList);
                 navigation.goBack();}}>
                 <Text style={styles.textStyle}>Sign In</Text>
             </TouchableOpacity>}
@@ -53,7 +55,7 @@ export default function LoginModal({navigation}) {
             </TouchableOpacity>}
         </View>
         </TouchableWithoutFeedback>
-        </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
   );
 }
 async function confirm(username,confirmation,setSignedIn) {
@@ -82,13 +84,13 @@ async function signUp(username,password,email,setEmailSent) {
     Alert.alert('Sign up error',error.message, [{ text: 'Ok' }]);
   }
 }
-async function signIn(username,password,setSignedIn,setFoodList,setRecipeList) {
+async function signIn(username,password,dispatch,setSignedIn,setRecipeList) {
   try {
       await Auth.signIn({
           username,
           password,
       })
-      .then(response=>{setSignedIn(true);getFood(setFoodList);getRecipe(setRecipeList);})
+      .then(response=>{setSignedIn(true);getFood(dispatch);getRecipe(setRecipeList);})
   } catch (error) {
     Alert.alert('Login error',error.message, [{ text: 'Ok' }]);
   }
