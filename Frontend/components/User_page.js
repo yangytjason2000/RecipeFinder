@@ -6,12 +6,11 @@ import LoginModal from './LoginModal';
 import store from './store';
 import { getFood } from './getFood';
 import { getRecipe } from './getRecipe';
+import { useSignIn } from '../context/signInContext';
 export default function User_page({navigation}) {
-  const [loginModalVisible,setLoginModalVisible] = useState(false);
-  const [signupModalVisible,setSignupModalVisible] = useState(false);
   const [foodList, setFoodList] = store.useState("foodList");
   const [recipeList,setRecipeList] = store.useState("recipeList");
-  const [signedIn,setSignedIn] = store.useState("signedIn");
+  const {signedIn,setSignedIn} = useSignIn();
   useEffect(()=>{
     const confirmSignedIn = async() => {
       try {

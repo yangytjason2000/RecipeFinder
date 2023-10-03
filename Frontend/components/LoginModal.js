@@ -5,6 +5,7 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { getFood } from './getFood';
 import { getRecipe } from './getRecipe';
 import { styles } from '../styles';
+import { useSignIn } from '../context/signInContext';
 import store from './store';
 export default function LoginModal({navigation}) {
     const [username,setUsername] = useState('');
@@ -15,7 +16,7 @@ export default function LoginModal({navigation}) {
     const [loginFlag,setLoginFlag] = useState(true);
     const [foodList, setFoodList] = store.useState("foodList");
     const [recipeList,setRecipeList] = store.useState("recipeList");
-    const [signedIn,setSignedIn] = store.useState("signedIn");
+    const {signedIn,setSignedIn} = useSignIn();
     return (
         <KeyboardAwareScrollView
         contentContainerStyle={{flex:1}}>

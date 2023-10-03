@@ -12,6 +12,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
 import { useDispatch,useSelector } from 'react-redux';
 import { changeRecommend } from '../../reducers/recommendReducer';
+import { useSignIn } from '../../context/signInContext';
 
 export default function Recipe({navigation}) {
   const [recipeList,setRecipeList] = store.useState("recipeList");
