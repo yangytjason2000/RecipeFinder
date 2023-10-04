@@ -4,12 +4,13 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
 import { updateErrorCheck } from './RecipeErrorCheck';
 import { addRecipe } from './AddRecipe';
-import store from '../store';
+import { useDispatch } from 'react-redux';
 export default function MethodModal({route,navigation}) {
   const {name,ingredient,initMethod,isAdd} = route.params;
   const [method,setMethod] = useState(initMethod);
   const [isEditingMethod,setIsEditingMethod] = useState(false);
-  const [recipeList,setRecipeList] = store.useState("recipeList");
+
+  const dispatch = useDispatch();
 
   function restore(){
     setIsEditingMethod(false);
@@ -30,12 +31,12 @@ export default function MethodModal({route,navigation}) {
 
         {!isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
+          onPress={async () => {await updateErrorCheck(name,ingredient,method,addRecipe,dispatch);restore();}}>
           <Text style={styles.textStyle}>Update Recipe</Text>
         </TouchableOpacity>}
         {isAdd && <TouchableOpacity
           style={[styles.button, styles.buttonClose]}
-          onPress={async () => {await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);restore();}}>
+          onPress={async () => {await updateErrorCheck(name,ingredient,method,addRecipe,dispatch);restore();}}>
           <Text style={styles.textStyle}>Add Recipe</Text>
         </TouchableOpacity>}
         </View>

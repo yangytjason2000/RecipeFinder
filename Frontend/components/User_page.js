@@ -2,22 +2,20 @@ import { StyleSheet, Text, View, Alert, TouchableOpacity, Image, Animated, SafeA
 import { useState, useRef, useEffect} from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../styles';
-import LoginModal from './LoginModal';
-import store from './store';
 import { getFood } from './getFood';
 import { getRecipe } from './getRecipe';
 import { useSignIn } from '../context/signInContext';
 import { useDispatch } from 'react-redux';
 import { changeFoodList } from '../reducers/foodListReducer';
+import { changeRecipeList } from '../reducers/recipeListReducer';
 export default function User_page({navigation}) {
-  const [recipeList,setRecipeList] = store.useState("recipeList");
   const {signedIn,setSignedIn} = useSignIn();
   const dispatch = useDispatch();
   useEffect(()=>{
     const confirmSignedIn = async() => {
       try {
         await Auth.currentAuthenticatedUser()
-        .then(()=>{setSignedIn(true);getFood(dispatch);getRecipe(setRecipeList);})
+        .then(()=>{setSignedIn(true);getFood(dispatch);getRecipe(dispatch);})
       } catch {
         setSignedIn(false);
       }
@@ -33,16 +31,16 @@ export default function User_page({navigation}) {
         <Text style={styles.textStyle}>Sign in</Text>
       </TouchableOpacity>}
       {signedIn && <TouchableOpacity style={[styles.signInButton,styles.signOutButton]} 
-      onPress={()=>signOut(setSignedIn,dispatch,setRecipeList)}>
+      onPress={()=>signOut(setSignedIn,dispatch)}>
         <Text style={styles.textStyle}>Sign out</Text>
       </TouchableOpacity>}
     </View>
   );
 }
-async function signOut(setSignedIn,dispatch,setRecipeList) {
+async function signOut(setSignedIn,dispatch) {
   try {
       await Auth.signOut({ global: true })
-      .then(()=>{setSignedIn(false);dispatch(changeFoodList([]));setRecipeList([]);});
+      .then(()=>{setSignedIn(false);dispatch(changeFoodList([]));dispatch(changeRecipeList([]));});
   } catch (error) {
       Alert.alert('Sign out error',error.message, [{ text: 'Ok' }]);
   }

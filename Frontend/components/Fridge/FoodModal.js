@@ -5,7 +5,6 @@ import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { updateErrorCheck } from './FridgeErrorCheck';
-import store from '../store';
 import { useDispatch } from 'react-redux';
 import { changeFoodList } from '../../reducers/foodListReducer';
 

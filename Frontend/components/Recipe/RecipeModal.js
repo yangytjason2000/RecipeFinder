@@ -6,7 +6,8 @@ import RecipeFridge from './recipeFridge';
 import ConfirmModal from '../confirm';
 import { updateErrorCheck } from './RecipeErrorCheck';
 import { addRecipe } from './AddRecipe';
-import store from '../store';
+import { useDispatch } from 'react-redux';
+import { changeFoodList } from '../../reducers/foodListReducer';
 export default function RecipeModal({route,navigation}) {
   const [isEditingName,setIsEditingName] = useState(false);
   const [confirmModalVisible,setConfirmModalVisible] = useState(false);
@@ -16,6 +17,8 @@ export default function RecipeModal({route,navigation}) {
   const [name,setName] = useState(initName);
   const [ingredient,setIngredient] = useState(initIngredient);
   const [method,setMethod] = useState(initMethod);
+
+  const dispatch = useDispatch();
   useEffect(()=>{
     if (route.params?.initIngredient){
       setIngredient(route.params.initIngredient);
@@ -23,8 +26,8 @@ export default function RecipeModal({route,navigation}) {
   },[route.params?.initIngredient])
 
   async function consumeConfirm(){
-    await consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeRecipe);
-    await updateErrorCheck(name,ingredient,method,setRecipeList,addRecipe);
+    await consumeErrorCheck(name,ingredient,method,setConfirmedPressed,consumeRecipe,dispatch);
+    await updateErrorCheck(name,ingredient,method,addRecipe,dispatch);
   }
   return (
       <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
@@ -61,15 +64,15 @@ export default function RecipeModal({route,navigation}) {
       </TouchableWithoutFeedback>
   );
 }
-async function consumeErrorCheck(name,ingredient,method,setFoodList,setConfirmedPressed,consumeMethod){
+async function consumeErrorCheck(name,ingredient,method,setConfirmedPressed,consumeMethod,dispatch){
   try {
     await Auth.currentAuthenticatedUser()
-    .then(()=>consumeMethod(name,ingredient,method,setFoodList,setConfirmedPressed))
+    .then(()=>consumeMethod(name,ingredient,method,setConfirmedPressed,dispatch))
   } catch (error) {
     Alert.alert('Eat this error',error.message, [{ text: 'Ok' }]);
   }
 }
-async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPressed){
+async function consumeRecipe(name,ingredient,method,setConfirmedPressed,dispatch){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -87,7 +90,7 @@ async function consumeRecipe(name,ingredient,method,setFoodList,setConfirmedPres
   .then(response => {
     if (response.ok){
       response.json().then(response=>{
-        setFoodList(response);
+        dispatch(changeFoodList(response));
         setConfirmedPressed(true);
       })
     }

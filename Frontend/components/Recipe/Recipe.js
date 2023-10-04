@@ -3,7 +3,6 @@ import { useState,useRef,useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
 import { getRecipe } from '../getRecipe';
-import store from '../store';
 import Item from './RecipeItem';
 import { updateErrorCheck } from './RecipeErrorCheck';
 import { AntDesign } from '@expo/vector-icons';
@@ -12,9 +11,10 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
 import { useDispatch,useSelector } from 'react-redux';
 import { changeRecommend } from '../../reducers/recommendReducer';
+import { changeRecipeList } from '../../reducers/recipeListReducer';
 
 export default function Recipe({navigation}) {
-  const [recipeList,setRecipeList] = store.useState("recipeList");
+  const recipeList = useSelector((state)=>state.recipeList.recipeList);
   const isRecommend = useSelector(state => state.recommend.isRecommend);
   const dispatch = useDispatch();
 
@@ -29,7 +29,7 @@ export default function Recipe({navigation}) {
   }
 
   const handleDelete = async (item) => {
-    await updateErrorCheck(item.name,item.ingredient,item.method,setRecipeList,removeRecipe);
+    await updateErrorCheck(item.name,item.ingredient,item.method,removeRecipe,dispatch);
     if (swipeableRefs.current[item.name]) {
       swipeableRefs.current[item.name].close();
       delete swipeableRefs.current[item.name];
@@ -90,13 +90,13 @@ export default function Recipe({navigation}) {
           <Text style={styles.addTextStyle}> New Recipe</Text>
         </TouchableOpacity>
         {!isRecommend && <TouchableOpacity  
-        onPress={async ()=>await recommendErrorCheck(setRecipeList,dispatch,getRecommendRecipe)} 
+        onPress={async ()=>await recommendErrorCheck(dispatch,getRecommendRecipe)} 
         style={styles.iosbutton}>
           <MaterialCommunityIcons name='thumb-up' size={22} color='green'/>
           <Text style={styles.recommendTextStyle}> Recommend</Text>
         </TouchableOpacity>}
         {isRecommend && <TouchableOpacity 
-        onPress={async ()=>await recommendErrorCheck(setRecipeList,dispatch,getAllRecipe)} 
+        onPress={async ()=>await recommendErrorCheck(dispatch,getAllRecipe)} 
         style={styles.iosbutton}>
         <Text style={styles.recommendTextStyle}>All Recipes</Text>
         </TouchableOpacity>}
@@ -104,15 +104,15 @@ export default function Recipe({navigation}) {
     </View>
   );
 }
-async function recommendErrorCheck(setRecipeList,dispatch,recommendMethod){
+async function recommendErrorCheck(dispatch,recommendMethod){
   try {
     await Auth.currentAuthenticatedUser()
-    .then(()=>recommendMethod(setRecipeList,dispatch))
+    .then(()=>recommendMethod(dispatch))
   } catch (error) {
     Alert.alert('Recommend error',error.message, [{ text: 'Ok' }]);
   }
 }
-async function getRecommendRecipe(setRecipeList,dispatch){
+async function getRecommendRecipe(dispatch){
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/recipes?database=recipe&mode=recommend',{
     method: "GET",
     headers: {
@@ -122,21 +122,21 @@ async function getRecommendRecipe(setRecipeList,dispatch){
     }
   })
   .then(response => response.json())
-  .then(response => {setRecipeList(response);dispatch(changeRecommend())})
+  .then(response => {dispatch(changeRecipeList(response));dispatch(changeRecommend())})
   .catch(error => {
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
   });
 }
 
-async function getAllRecipe(setRecipeList,dispatch){
-  await getRecipe(setRecipeList)
+async function getAllRecipe(dispatch){
+  await getRecipe(dispatch)
   .then(response => dispatch(changeRecommend()))
   .catch(error => {
     Alert.alert('Error',error.message, [{ text: 'Ok' }]);
   });
 }
 
-async function removeRecipe(name,ingredient,method,setRecipeList){
+async function removeRecipe(name,ingredient,method,dispatch){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -154,7 +154,7 @@ async function removeRecipe(name,ingredient,method,setRecipeList){
   .then(response => {
     if (response.ok){
       response.json().then(response=>{
-        setRecipeList(response);;
+        dispatch(changeRecipeList(response));
       })
     }
     else{

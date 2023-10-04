@@ -6,7 +6,6 @@ import { getFood } from './getFood';
 import { getRecipe } from './getRecipe';
 import { styles } from '../styles';
 import { useSignIn } from '../context/signInContext';
-import store from './store';
 import { useDispatch } from 'react-redux';
 export default function LoginModal({navigation}) {
     const [username,setUsername] = useState('');
@@ -15,8 +14,7 @@ export default function LoginModal({navigation}) {
     const [emailsent,setEmailSent] = useState(false);
     const [confirmation,setConfirmation] = useState('');
     const [loginFlag,setLoginFlag] = useState(true);
-    // const [foodList, setFoodList] = store.useState("foodList");
-    const [recipeList,setRecipeList] = store.useState("recipeList");
+
     const {signedIn,setSignedIn} = useSignIn();
     const dispatch = useDispatch();
     return (
@@ -34,7 +32,7 @@ export default function LoginModal({navigation}) {
             {(!loginFlag && emailsent) && <TextInput style={styles.input} onChangeText={setConfirmation} value={confirmation}/>}
             {loginFlag && <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
-                onPress={async ()=> {await signIn(username,password,dispatch,setSignedIn,setRecipeList);
+                onPress={async ()=> {await signIn(username,password,dispatch,setSignedIn);
                 navigation.goBack();}}>
                 <Text style={styles.textStyle}>Sign In</Text>
             </TouchableOpacity>}
@@ -84,13 +82,13 @@ async function signUp(username,password,email,setEmailSent) {
     Alert.alert('Sign up error',error.message, [{ text: 'Ok' }]);
   }
 }
-async function signIn(username,password,dispatch,setSignedIn,setRecipeList) {
+async function signIn(username,password,dispatch,setSignedIn) {
   try {
       await Auth.signIn({
           username,
           password,
       })
-      .then(response=>{setSignedIn(true);getFood(dispatch);getRecipe(setRecipeList);})
+      .then(response=>{setSignedIn(true);getFood(dispatch);getRecipe(dispatch);})
   } catch (error) {
     Alert.alert('Login error',error.message, [{ text: 'Ok' }]);
   }

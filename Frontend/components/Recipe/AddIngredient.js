@@ -1,9 +1,7 @@
 import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, TouchableOpacity, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
-import store from '../store';
 export default function AddIngredient({route,navigation}) {
   const {item,isAdd,ingredientList} = route.params;
   const [name,setName] = useState(item.name);

@@ -1,7 +1,8 @@
 import Amplify,{ Auth } from 'aws-amplify';
 import { Alert } from 'react-native';
+import { changeRecipeList } from '../../reducers/recipeListReducer';
 
-export async function addRecipe(name,ingredient,method,setRecipeList){
+export async function addRecipe(name,ingredient,method,dispatch){
   const message={
     "name": name,
     "ingredient": ingredient,
@@ -20,7 +21,7 @@ export async function addRecipe(name,ingredient,method,setRecipeList){
   .then(response => {
     if (response.ok){
       response.json().then(response=>{
-        setRecipeList(response);
+        dispatch(changeRecipeList(response));
       })
     }
     else{

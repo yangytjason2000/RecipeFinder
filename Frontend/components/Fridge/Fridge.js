@@ -6,7 +6,6 @@ import { Auth } from 'aws-amplify';
 import { updateErrorCheck } from './FridgeErrorCheck';
 import { Swipeable } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
-import store from '../store';
 import Item from './FoodItem';
 import { SearchBar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
