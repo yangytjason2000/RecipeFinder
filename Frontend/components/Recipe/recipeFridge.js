@@ -6,9 +6,9 @@ import Item from './IngredientItem';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { AntDesign } from '@expo/vector-icons';
 export default function RecipeFridge({ingredientList,navigation}) {
-  async function navigateToAdd(name,number,unit,emoji,isAdd){
+  function navigateToAdd(item,isAdd){
     navigation.navigate('AddIngredient',
-    {initName:name,initNumber:number,initUnit:unit,initEmoji:emoji,isAdd:isAdd,ingredientList:ingredientList});
+    {item:item,isAdd:isAdd,ingredientList:ingredientList});
   }
   return (
     <View style={styles.container}>
@@ -19,7 +19,7 @@ export default function RecipeFridge({ingredientList,navigation}) {
         navigateToAdd={navigateToAdd}/>}
       />
       </SafeAreaView>
-      <TouchableOpacity  onPress={async ()=>await navigateToAdd('','','','',true)} style={styles.iosbutton}>
+      <TouchableOpacity  onPress={()=>navigateToAdd({name:'',quantity:'',unit:'',emoji:''},true)} style={styles.iosbutton}>
         <AntDesign name="pluscircleo" size={20} color="#007AFF" />
         <Text style={[styles.addTextStyle,styles.recipeAddIngredientTextSize]}> Ingredients</Text>
       </TouchableOpacity>

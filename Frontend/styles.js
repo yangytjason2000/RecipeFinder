@@ -58,7 +58,7 @@ export  const styles = StyleSheet.create({
       padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
-      borderRadius: 25,
+      borderRadius: 10,
     },
     food: {
       fontSize: 15,
@@ -96,6 +96,9 @@ export  const styles = StyleSheet.create({
       marginBottom: 10,
       marginTop: 10,
     },
+    signOutButton: {
+      backgroundColor: 'red',
+    },
     button: {
       borderRadius: 20,
       padding: 10,
@@ -116,7 +119,7 @@ export  const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       width: 80,
-      borderRadius: 20,
+      borderRadius: 10,
       padding: 20,
       marginVertical: 8,
     },

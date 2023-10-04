@@ -3,112 +3,94 @@ import { useState,useRef,useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { updateErrorCheck } from './FridgeErrorCheck';
+import { useDispatch } from 'react-redux';
+import { changeFoodList } from '../../reducers/foodListReducer';
 
-export default function FoodModal({modalVisible,setModalVisible,name='',emoji='',number='',unit=''
-,date=new Date(),foodList=[],setName,setNumber,setUnit,setEmoji,setDate,setFoodList,deleteFlag=false,isRecipe=false}) {
-  const [isLoading,setIsLoading] = useState(false);
-  function restore(){
-    setModalVisible(false);
-    setName('');
-    setNumber('');
-    setUnit('');
-    setEmoji('');
-    setDate(new Date());
+export default function FoodModal({route,navigation}) {
+  const {item,isAdd} = route.params;
+  const [name,setName] = useState(item.name);
+  const [quantity,setQuantity] = useState(item.quantity);
+  const [unit,setUnit] = useState(item.unit);
+  const [emoji,setEmoji] = useState(item.emoji);
+  const [date,setDate] = useState(new Date(item.date));
+  const [datePickerVisible,setDatePickerVisible] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  }
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  }
+  const handleDateConfirm = (selectedDate) => {
+    setDate(selectedDate);
+    setDatePickerVisible(false);
   }
   return (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
         <KeyboardAwareScrollView
         contentContainerStyle={{flex:1}}>
         <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {!deleteFlag && <Text style={styles.title}>name</Text>}
-            {!deleteFlag && <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
-            {deleteFlag && <Text style={styles.nameTitle}>{name+'\n'}</Text>}
-            <Text style={styles.title}>number</Text> 
-            <TextInput style={styles.input} onChangeText={setNumber} value={number} placeholder={number}/>
+            {isAdd && <Text style={styles.title}>name</Text>}
+            {isAdd && <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
+            {!isAdd && <Text style={styles.nameTitle}>{name+'\n'}</Text>}
+            <Text style={styles.title}>quantity</Text> 
+            <TextInput style={styles.input} onChangeText={setQuantity} value={quantity} placeholder={quantity}/>
             <Text style={styles.title}>unit</Text> 
             <TextInput style={styles.input} onChangeText={setUnit} value={unit} placeholder={unit}/>
             <Text style={styles.title}>emoji</Text>
             <TextInput style={styles.input} onChangeText={setEmoji} value={emoji} placeholder={emoji}/>
-            {!isRecipe && <Text style={styles.title}>expiration date</Text>}
-            {!isRecipe && <DateTimePicker value={date} onChange={(event, selected) => setDate(selected)} mode="date" />}
-            {deleteFlag ?<TouchableOpacity
-                style={[styles.button,styles.buttonClose]}
-                onPress={async ()=> {if (isRecipe) {
-                  saveRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
-                } else {
-                  await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
-                  restore();
-                }}}>
-                <Text style={styles.textStyle}>Save</Text>
-              </TouchableOpacity> :
-              <TouchableOpacity
-              style={[styles.button,styles.buttonClose]}
-              onPress={async ()=> {if (isRecipe) {
-                addRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore);
-              } else {
-                await updateErrorCheck(name, number, unit, emoji, date, setFoodList, addFood);
-                restore();
-              }}}>
-              <Text style={styles.textStyle}>Add</Text>
-              </TouchableOpacity>}
-            {(deleteFlag && isRecipe) && <TouchableOpacity 
-              style={[styles.button,styles.buttonClose]}
-              onPress={async ()=> removeRecipeFood(name, number, unit, emoji, foodList, setFoodList, restore)}>
-              <Text style={styles.textStyle}>Delete</Text>
-            </TouchableOpacity>}
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => restore()}>
-              <Text style={styles.textStyle}>Back</Text>
+            <Text 
+              style={styles.title}>
+                expiration date
+            </Text>
+            <TouchableOpacity onPress={showDatePicker}>
+              <Text 
+                style=
+                  {
+                    { fontSize: 24, 
+                      fontWeight: 'bold', 
+                      marginBottom: 20, 
+                      color: date>new Date() ? 'green' : 'red'}
+                  }>
+                {date ? date.toLocaleDateString() : 'No date selected'}
+              </Text>
             </TouchableOpacity>
-          </View>
+            <DateTimePickerModal
+              isVisible={datePickerVisible}
+              date={date} 
+              onConfirm={handleDateConfirm} 
+              onCancel={hideDatePicker}
+              mode="date" />
+            <TouchableOpacity
+                style={[styles.button,styles.buttonClose]}
+                onPress={async ()=> {
+                  await updateErrorCheck(
+                    {name:name, quantity:quantity, unit:unit, emoji:emoji, date:date}, addFood,dispatch);
+                  navigation.goBack();
+                }}>
+                {isAdd ?
+                <Text style={styles.textStyle}>Add</Text>
+                :
+                <Text style={styles.textStyle}>Save</Text>
+                }
+            </TouchableOpacity>
         </View>
         </TouchableWithoutFeedback>
         </KeyboardAwareScrollView>
-        </Modal>
   );
 }
-function addRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
-  const newList = foodList.concat({ name:name, quantity:number, unit:unit, emoji:emoji });
-  setFoodList(newList);
-  restore();
-}
-function saveRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
-  for (var i=0;i<foodList.length;i++){
-    if (foodList[i]['name']==name) {
-      const newList = foodList.map(item => ({ ...item }));
-      newList[i]['quantity']=number;
-      newList[i]['unit']=unit;
-      newList[i]['emoji']=emoji;
-      setFoodList(newList);
-      restore();
-      return;
-    }
-  }
-}
-function removeRecipeFood(name,number,unit,emoji,foodList,setFoodList,restore){
-  const newList = foodList.filter((item) => item.name!=name);
-  setFoodList(newList);
-  restore();
-}
-async function addFood(name,number,unit,emoji,date,setFoodList){
+
+async function addFood(item,dispatch){
   const message={
-    "name": name,
-    "emoji": emoji,
-    "quantity": number,
-    "unit": unit,
-    "date": date,
+    "name": item.name,
+    "emoji": item.emoji,
+    "quantity": item.quantity,
+    "unit": item.unit,
+    "date": item.date,
   }
   await fetch('https://gdh7356lm2.execute-api.us-west-1.amazonaws.com/prod/ingredients?database=ingredient&mode=single',{
     method: "POST",
@@ -122,7 +104,7 @@ async function addFood(name,number,unit,emoji,date,setFoodList){
   .then(response => {
     if (response.ok){
       response.json().then(response=>{
-        setFoodList(response);
+        dispatch(changeFoodList(response));
       })
     }
     else{

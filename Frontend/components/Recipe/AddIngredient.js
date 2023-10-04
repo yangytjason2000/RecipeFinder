@@ -1,15 +1,13 @@
 import { Modal, TouchableWithoutFeedback, Text, View, Keyboard, Alert, TouchableOpacity, TextInput} from 'react-native';
 import { useState,useRef,useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Amplify,{ Auth } from 'aws-amplify';
 import { styles } from '../../styles';
-import store from '../store';
 export default function AddIngredient({route,navigation}) {
-  const {initName,initNumber,initUnit,initEmoji,isAdd,ingredientList} = route.params;
-  const [name,setName] = useState(initName);
-  const [number,setNumber] = useState(initNumber);
-  const [unit,setUnit] = useState(initUnit);
-  const [emoji,setEmoji] = useState(initEmoji);
+  const {item,isAdd,ingredientList} = route.params;
+  const [name,setName] = useState(item.name);
+  const [quantity,setQuantity] = useState(item.quantity);
+  const [unit,setUnit] = useState(item.unit);
+  const [emoji,setEmoji] = useState(item.emoji);
 
   return (
     <KeyboardAwareScrollView
@@ -19,8 +17,8 @@ export default function AddIngredient({route,navigation}) {
             {isAdd && <Text style={styles.title}>name</Text>}
             {isAdd && <TextInput style={styles.input} onChangeText={setName} value={name} placeholder={name}/>}
             {!isAdd && <Text style={styles.nameTitle}>{name+'\n'}</Text>}
-            <Text style={styles.title}>number</Text> 
-            <TextInput style={styles.input} onChangeText={setNumber} value={number} placeholder={number}/>
+            <Text style={styles.title}>quantity</Text> 
+            <TextInput style={styles.input} onChangeText={setQuantity} value={quantity} placeholder={quantity}/>
             <Text style={styles.title}>unit</Text> 
             <TextInput style={styles.input} onChangeText={setUnit} value={unit} placeholder={unit}/>
             <Text style={styles.title}>emoji</Text>
@@ -29,7 +27,7 @@ export default function AddIngredient({route,navigation}) {
               <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
                 onPress={()=> 
-                  saveRecipeFood(name, number, unit, emoji, ingredientList,navigation)
+                  saveRecipeFood(name, quantity, unit, emoji, ingredientList,navigation)
                 }
                 >
                 <Text style={styles.textStyle}>Save</Text>
@@ -37,7 +35,7 @@ export default function AddIngredient({route,navigation}) {
               <TouchableOpacity
                 style={[styles.button,styles.buttonClose]}
                 onPress={()=> {
-                    addRecipeFood(name, number, unit, emoji, ingredientList,navigation,route);
+                    addRecipeFood(name, quantity, unit, emoji, ingredientList,navigation);
                 }}>
                 <Text style={styles.textStyle}>Add</Text>
               </TouchableOpacity>}
@@ -57,15 +55,15 @@ export default function AddIngredient({route,navigation}) {
     </KeyboardAwareScrollView>
   );
 }
-function addRecipeFood(name,number,unit,emoji,ingredientList,navigation,route){
-  const newList = ingredientList.concat({ name:name, quantity:number, unit:unit, emoji:emoji });
+function addRecipeFood(name,quantity,unit,emoji,ingredientList,navigation){
+  const newList = ingredientList.concat({ name:name, quantity:quantity, unit:unit, emoji:emoji });
   navigation.navigate({name:'Modify Recipe',params:{initIngredient: newList},merge: true});
 }
-function saveRecipeFood(name,number,unit,emoji,ingredientList,navigation){
+function saveRecipeFood(name,quantity,unit,emoji,ingredientList,navigation){
   for (var i=0;i<ingredientList.length;i++){
     if (ingredientList[i]['name']==name) {
       const newList = ingredientList.map(item => ({ ...item }));
-      newList[i]['quantity']=number;
+      newList[i]['quantity']=quantity;
       newList[i]['unit']=unit;
       newList[i]['emoji']=emoji;
       navigation.navigate({name:'Modify Recipe',params:{initIngredient: newList},merge: true});
